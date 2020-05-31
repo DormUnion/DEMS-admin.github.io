@@ -7,6 +7,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <meta name="description" content="">
   <meta name="author" content="">
+  <script src="https://www.gstatic.com/firebasejs/7.14.4/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/7.14.4/firebase-firestore.js"></script>
 
   <title>DEMS</title>
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" type="text/css" />
@@ -32,8 +34,7 @@
       <div class="list-group list-group-flush">
         <a href="./index.html" class="list-group-item list-group-item-action bg-light">물품관리 내역</a>
         <a href="./list.html" class="list-group-item list-group-item-action bg-dark active">물품 리스트</a>
-        <a href="./location.html" class="list-group-item list-group-item-action bg-light">물품 위치</a>
-        <a href="https://docs.google.com/document/d/1VwoDJ7murXERp40NkSfLysPulMXHkHMSxEZ_gIiRA4s/edit?usp=sharing" class="list-group-item list-group-item-action bg-light">매뉴얼</a>
+        <a href="./location.html" class="list-group-item list-group-item-action bg-light">물품 물품</a>
         <!-- <a href="#" class="list-group-item list-group-item-action bg-light">Events</a>
         <a href="#" class="list-group-item list-group-item-action bg-light">Profile</a>
         <a href="#" class="list-group-item list-group-item-action bg-light">Status</a> -->
@@ -52,7 +53,7 @@
         </div>
         
         <div class="text_title">
-          <p>&nbsp&nbsp&nbsp 물품 리스트 </p>
+          <p>&nbsp&nbsp&nbsp 자치회 물품 리스트 </p>
         </div>
         
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -83,31 +84,31 @@
         <div data-role="body">
           <input type="hidden" id="ID" />
           <div class="">
-            <input type="text" class="gj-textbox-md" id="Category" placeholder="분류...">
+            <input type="text" class="gj-textbox-md" id="Category" placeholder="Category...">
           </div>
           <div class="gj-margin-top-20">
-            <input type="text" class="gj-textbox-md" id="Name" placeholder="물품명..." />
+            <input type="text" class="gj-textbox-md" id="Name" placeholder="Name..." />
           </div>
           <div class="">
-            <input type="text" class="gj-textbox-md" id="Total" placeholder="전체수량...">
+            <input type="text" class="gj-textbox-md" id="Total" placeholder="Total...">
           </div>
           <div class="">
-            <input type="text" class="gj-textbox-md" id="Available" placeholder="현재수량...">
+            <input type="text" class="gj-textbox-md" id="Available" placeholder="Available...">
           </div>
           <div class="">
-            <input type="text" class="gj-textbox-md" id="Period" placeholder="대여기간...">
+            <input type="text" class="gj-textbox-md" id="Period" placeholder="Period...">
           </div>
           <div class="">
-            <input type="text" class="gj-textbox-md" id="Cert" placeholder="보증금...">
+            <input type="text" class="gj-textbox-md" id="Cert" placeholder="Cert...">
           </div>
           <div class="">
-            <input type="text" class="gj-textbox-md" id="Rental" placeholder="대여료...">
+            <input type="text" class="gj-textbox-md" id="Rental" placeholder="Rental...">
           </div>
           <div class="">
-            <input type="text" class="gj-textbox-md" id="Late" placeholder="연체료...">
+            <input type="text" class="gj-textbox-md" id="Late" placeholder="Late...">
           </div>
           <div class="">
-            <input type="text" class="gj-textbox-md" id="Etc" placeholder="비고...">
+            <input type="text" class="gj-textbox-md" id="Etc" placeholder="Etc...">
           </div>
         </div>
 
@@ -135,6 +136,7 @@
 <script src="https://unpkg.com/gijgo@1.9.13/js/gijgo.min.js" type="text/javascript"></script>
 <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 <script type="text/javascript" src="./vendor/jquery/checkbox.js"></script>
+<script src="https://www.gstatic.com/firebasejs/7.14.4/firebase-analytics.js"></script>
 
 <!-- Menu Toggle Script -->
 <script>
@@ -148,89 +150,140 @@
 </script>
   <script type="text/javascript">
     $(document).ready(function () {
-      var data, grid, dialog;
-      data = [
-        { 'ID': 1, 'Category': '운동기구', 'Name': '고리던지기', 'Total': '4', 'Available': '3', 'Period': '7', 'Cert': '5,000', 'Rental': '0','Late': '0', 'Etc':'-' },
-        { 'ID': 2, 'Category': 'BBQ', 'Name': '가위/집게', 'Total': '50', 'Available': '30', 'Period': '7', 'Cert': '5,000', 'Rental': '1,000','Late': '1,000', 'Etc':'-' },
-        { 'ID': 3, 'Category': '악기', 'Name': '신디사이져', 'Total': '1', 'Available': '1', 'Period': '7', 'Cert': '50,000', 'Rental': '10,000','Late': '0', 'Etc':'-' }
-      ];
-      grid = $('#grid').grid({
-        primaryKey: 'ID',
-        dataSource: data,
-        columns: [
-          { field: 'ID', width: 56 },
-          { field: 'Category', title: '분류', sortable: true },
-          { field: 'Name', title: '물품명', sortable: true },
-          { field: 'Total', title: '전체수량', sortable: true },
-          { field: 'Available', title: '현재수량', sortable: true },
-          { field: 'Period', title: '대여기간', sortable: true },
-          { field: 'Cert', title: '보증금', sortable: true },
-          { field: 'Rental', title: '대여료', sortable: true },
-          { field: 'Late', title: '연체료', sortable: true },
-          { field: 'Etc', title: '비고', sortable: true },
-          { width: 64, tmpl: '<span class="material-icons gj-cursor-pointer">edit</span>', align: 'center', events: { 'click': Edit } },
-          { width: 64, tmpl: '<span class="material-icons gj-cursor-pointer">delete</span>', align: 'center', events: { 'click': Delete } }
-        ],
-        pager: { limit: 5 }
-      });
-      dialog = $('#dialog').dialog({
-        autoOpen: false,
-        resizable: false,
-        modal: true,
-        width: 360
-      });
-      function Edit(e) {
-        $('#ID').val(e.data.id);
-        $('#Category').val(e.data.record.Category);
-        $('#Name').val(e.data.record.Name);
-        $('#Total').val(e.data.record.Total);
-        $('#Available').val(e.data.record.Available);
-        $('#Period').val(e.data.record.Period);
-        $('#Cert').val(e.data.record.Cert);
-        $('#Rental').val(e.data.record.Rental);
-        $('#Late').val(e.data.record.Late);
-        $('#Etc').val(e.data.record.Etc);
-        dialog.open('Edit Items');
-      }
-      function Delete(e) {
-        if (confirm('Are you sure?')) {
-          grid.removeRow(e.data.id);
+    var firebaseConfig = {
+      apiKey: "AIzaSyAqwpkJRTaDGkSFcRcc8kx2f6M5foeEFEE",
+      authDomain: "dems-2a183.firebaseapp.com",
+      databaseURL: "https://dems-2a183.firebaseio.com",
+      projectId: "dems-2a183",
+      storageBucket: "dems-2a183.appspot.com",
+      messagingSenderId: "554123402821",
+      appId: "1:554123402821:web:12cd312639412b240d8d2c",
+      measurementId: "G-PKCJ378JY8"
+    };
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+    firebase.analytics();
+    const db = firebase.firestore();
+
+    var grid, dialog;
+    var data = [];
+
+    db.collection('물품').get().then((snapshot) => {
+      let changes = snapshot.docChanges();
+        changes.forEach(change => {
+            // console.log(change.doc.id);
+            // console.log(doc.data())
+          if(change.type == 'added'){
+            data.push({ 'ID': change.doc.id, 'Category': change.doc.data().Category, 'Name': change.doc.data().Name, 'Total': change.doc.data().Total, 'Available': change.doc.data().Available, 'Period': change.doc.data().Period, 'Cert': change.doc.data().Cert, 'Rental': change.doc.data().Rental,'Late': change.doc.data().Late, 'Etc':change.doc.data().Etc });
+          }    
+        })
+
+        grid = $('#grid').grid({
+          primaryKey: 'ID',
+          dataSource: data,
+          columns: [
+            { field: 'ID', width: 56 },
+            { field: 'Category', title: '분류', sortable: true },
+            { field: 'Name', title: '물품명', sortable: true },
+            { field: 'Total', title: '전체수량', sortable: true },
+            { field: 'Available', title: '현재수량', sortable: true },
+            { field: 'Period', title: '대여기간', sortable: true },
+            { field: 'Cert', title: '보증금', sortable: true },
+            { field: 'Rental', title: '대여료', sortable: true },
+            { field: 'Late', title: '연체료', sortable: true },
+            { field: 'Etc', title: '비고', sortable: true },
+            { width: 64, tmpl: '<span class="material-icons gj-cursor-pointer">edit</span>', align: 'center', events: { 'click': Edit } },
+            { width: 64, tmpl: '<span class="material-icons gj-cursor-pointer">delete</span>', align: 'center', events: { 'click': Delete } }
+          ],
+          pager: { limit: 5 }
+        });
+
+        dialog = $('#dialog').dialog({
+          autoOpen: false,
+          resizable: false,
+          modal: true,
+          width: 360
+        });
+
+        function Edit(e) {
+          $('#ID').val(e.data.id);
+          $('#Category').val(e.data.record.Category);
+          $('#Name').val(e.data.record.Name);
+          $('#Total').val(e.data.record.Total);
+          $('#Available').val(e.data.record.Available);
+          $('#Period').val(e.data.record.Period);
+          $('#Cert').val(e.data.record.Cert);
+          $('#Rental').val(e.data.record.Rental);
+          $('#Late').val(e.data.record.Late);
+          $('#Etc').val(e.data.record.Etc);
+          dialog.open('Edit Items');
         }
-      }
-      function Save() {
-        if ($('#ID').val()) {
-          var id = parseInt($('#ID').val());
-          grid.updateRow(id, { 'ID': id, 'Name': $('#Name').val(), 'PlaceOfBirth': $('#PlaceOfBirth').val() });
-        } else {
-          grid.addRow({ 'ID': grid.count(true) + 1, 'Name': $('#Name').val(), 'PlaceOfBirth': $('#PlaceOfBirth').val() });
+
+        function Delete(e) {
+          if (confirm('Are you sure?')) {
+            db.collection('물품').doc(e.data.id.toString()).delete();
+            grid.removeRow(e.data.id);
+          }
         }
-        dialog.close();
-      }
-      $('#btnAdd').on('click', function () {
-        $('#ID').val('');
-        $('#Category').val('');
-        $('#Name').val('');
-        $('#Total').val('');
-        $('#Available').val('');
-        $('#Period').val('');
-        $('#Cert').val('');
-        $('#Rental').val('');
-        $('#Late').val('');
-        $('#Etc').val('');
-        dialog.open('Add Items');
-      });
-      $('#btnSave').on('click', Save);
-      $('#btnCancel').on('click', function () {
-        dialog.close();
-      });
-      $('#btnSearch').on('click', function () {
-        grid.reload({ page: 1, Name: $('#txtName').val(), PlaceOfBirth: $('#txtPlaceOfBirth').val() });
-      });
-      $('#btnClear').on('click', function () {
-        $('#txtName').val('');
-        $('#txtPlaceOfBirth').val('');
-        grid.reload({ page: 1, Name: $('#txtName').val(), PlaceOfBirth: $('#txtPlaceOfBirth').val() });
-      });
+        function Save() {
+          if ($('#ID').val()) {
+            var id = parseInt($('#ID').val());
+          db.collection('물품').doc(id.toString()).set({
+            Category: $('#Category').val(),
+            Name: $('#Name').val(),
+            Total: $('#Total').val(),
+            Available: $('#Available').val(),
+            Period: $('#Period').val(),
+            Cert: $('#Cert').val(),
+            Rental: $('#Rental').val(),
+            Late: $('#Late').val(),
+            Etc: $('#Etc').val(),  
+          })
+            grid.updateRow(id, { 'ID': id, 'Name': $('#Name').val(), 'PlaceOfBirth': $('#PlaceOfBirth').val() });
+          } else {
+          db.collection('물품').doc((grid.count(true)+1).toString()).set({
+            Category: $('#Category').val(),
+            Name: $('#Name').val(),
+            Total: $('#Total').val(),
+            Available: $('#Available').val(),
+            Period: $('#Period').val(),
+            Cert: $('#Cert').val(),
+            Rental: $('#Rental').val(),
+            Late: $('#Late').val(),
+            Etc: $('#Etc').val(),  
+          })
+            grid.addRow({ 'ID': grid.count(true) + 1, 'Name': $('#Name').val(), 'PlaceOfBirth': $('#PlaceOfBirth').val() });
+          }
+          dialog.close();
+        }
+        $('#btnAdd').on('click', function () {
+          $('#ID').val('');
+          $('#Category').val('');
+          $('#Name').val('');
+          $('#Total').val('');
+          $('#Available').val('');
+          $('#Period').val('');
+          $('#Cert').val('');
+          $('#Rental').val('');
+          $('#Late').val('');
+          $('#Etc').val('');
+          dialog.open('Add Items');
+        });
+        $('#btnSave').on('click', Save);
+        $('#btnCancel').on('click', function () {
+          dialog.close();
+        });
+        $('#btnSearch').on('click', function () {
+          grid.reload({ page: 1, Name: $('#txtName').val(), PlaceOfBirth: $('#txtPlaceOfBirth').val() });
+        });
+        $('#btnClear').on('click', function () {
+          $('#txtName').val('');
+          $('#txtPlaceOfBirth').val('');
+          grid.reload({ page: 1, Name: $('#txtName').val(), PlaceOfBirth: $('#txtPlaceOfBirth').val() });
+        });
+      })
+
+
     });
   </script>
 </body>
