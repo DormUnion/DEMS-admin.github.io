@@ -7,6 +7,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <meta name="description" content="">
   <meta name="author" content="">
+  <script src="https://www.gstatic.com/firebasejs/7.14.4/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/7.14.4/firebase-firestore.js"></script>
 
   <title>DEMS</title>
 
@@ -117,6 +119,7 @@
 <script src="https://unpkg.com/gijgo@1.9.13/js/gijgo.min.js" type="text/javascript"></script>
 <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 <script type="text/javascript" src="./vendor/jquery/checkbox.js"></script>
+<script src="https://www.gstatic.com/firebasejs/7.14.4/firebase-analytics.js"></script>
 
 <!-- Menu Toggle Script -->
 <script>
@@ -130,71 +133,120 @@
 </script>
 <script type="text/javascript">
   $(document).ready(function () {
-    var data, grid, dialog;
-    data = [
-      { 'ID': 1, 'Category': '구호물품', 'Item': '야광조끼', 'Location': '회의실 쪽 책상 밑 박스'},
-      { 'ID': 2, 'Category': '이벤트', 'Item': '장미라이트', 'Location': '야구배트 옆 철장서'},
-      { 'ID': 3, 'Category': '전자기기', 'Item': '음향스피', 'Location': '어딘가'},
-    ];
-    grid = $('#grid').grid({
-      primaryKey: 'ID',
-      dataSource: data,
-      columns: [
-        { field: 'ID', width: 56 },
-        { field: 'Category', title: '분류', sortable: true },
-        { field: 'Item', title: '물품이름', sortable: true },
-        { field: 'Location', title: '위치', sortable: true },
-        { width: 64, tmpl: '<span class="material-icons gj-cursor-pointer">edit</span>', align: 'center', events: { 'click': Edit } },
-        { width: 64, tmpl: '<span class="material-icons gj-cursor-pointer">delete</span>', align: 'center', events: { 'click': Delete } }
-      ],
-      pager: { limit: 5 }
-    });
-    dialog = $('#dialog').dialog({
-      autoOpen: false,
-      resizable: false,
-      modal: true,
-      width: 360
-    });
-    function Edit(e) {
-      $('#ID').val(e.data.id);
-      $('#Category').val(e.data.record.Name);
-      $('#Item').val(e.data.record.SID);
-      $('#Location').val(e.data.record.PNum);
-      dialog.open('Edit');
-    }
-    function Delete(e) {
-      if (confirm('Are you sure?')) {
-        grid.removeRow(e.data.id);
+var firebaseConfig = {
+      apiKey: "AIzaSyAqwpkJRTaDGkSFcRcc8kx2f6M5foeEFEE",
+      authDomain: "dems-2a183.firebaseapp.com",
+      databaseURL: "https://dems-2a183.firebaseio.com",
+      projectId: "dems-2a183",
+      storageBucket: "dems-2a183.appspot.com",
+      messagingSenderId: "554123402821",
+      appId: "1:554123402821:web:12cd312639412b240d8d2c",
+      measurementId: "G-PKCJ378JY8"
+    };
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+    firebase.analytics();
+    const db = firebase.firestore();
+
+    var grid, dialog;
+    var data = [];
+
+
+    db.collection('위치').get().then((snapshot) => {
+      let changes = snapshot.docChanges();
+      changes.forEach(change => {
+          // console.log(change.doc.id);
+          // console.log(doc.data())
+        if(change.type == 'added'){
+          data.push({ 'ID': change.doc.id, 'Category': change.doc.data().Category, 'Item': change.doc.data().Item, 'Location': change.doc.data().Location});
+        }  
+      })
+
+      grid = $('#grid').grid({
+        primaryKey: 'ID',
+        dataSource: data,
+        columns: [
+          { field: 'ID', width: 56 },
+          { field: 'Category', title: '분류', sortable: true },
+          { field: 'Item', title: '물품이름', sortable: true },
+          { field: 'Location', title: '위치', sortable: true },
+          { width: 64, tmpl: '<span class="material-icons gj-cursor-pointer">edit</span>', align: 'center', events: { 'click': Edit } },
+          { width: 64, tmpl: '<span class="material-icons gj-cursor-pointer">delete</span>', align: 'center', events: { 'click': Delete } }
+        ],
+        pager: { limit: 5 }
+      });
+      dialog = $('#dialog').dialog({
+        autoOpen: false,
+        resizable: false,
+        modal: true,
+        width: 360
+      });
+      function Edit(e) {
+        $('#ID').val(e.data.id);
+        $('#Category').val(e.data.record.Name);
+        $('#Item').val(e.data.record.SID);
+        $('#Location').val(e.data.record.PNum);
+        dialog.open('Edit');
       }
-    }
-    function Save() {
-      if ($('#ID').val()) {
-        var id = parseInt($('#ID').val());
-        grid.updateRow(id, { 'ID': id, 'Name': $('#Name').val(), 'PlaceOfBirth': $('#PlaceOfBirth').val() });
-      } else {
-        grid.addRow({ 'ID': grid.count(true) + 1, 'Name': $('#Name').val(), 'PlaceOfBirth': $('#PlaceOfBirth').val() });
+      function Delete(e) {
+        if (confirm('Are you sure?')) {
+          db.collection('위치').doc(e.data.id.toString()).delete();
+          grid.removeRow(e.data.id);
+        }
       }
-      dialog.close();
-    }
-    $('#btnAdd').on('click', function () {
-      $('#ID').val('');
-      $('#Category').val('');
-      $('#Item').val('');
-      $('#Location').val('');
-      dialog.open('Add');
-    });
-    $('#btnSave').on('click', Save);
-    $('#btnCancel').on('click', function () {
-      dialog.close();
-    });
-    $('#btnSearch').on('click', function () {
-      grid.reload({ page: 1, Name: $('#txtName').val(), PlaceOfBirth: $('#txtPlaceOfBirth').val() });
-    });
-    $('#btnClear').on('click', function () {
-      $('#txtName').val('');
-      $('#txtPlaceOfBirth').val('');
-      grid.reload({ page: 1, Name: $('#txtName').val(), PlaceOfBirth: $('#txtPlaceOfBirth').val() });
-    });
+      function Save() {
+        console.log(grid.count(true));
+        if ($('#ID').val()) {
+          var id = parseInt($('#ID').val());
+          db.collection('위치').doc(id.toString()).set({
+            Category: $('#Category').val(),
+            Item: $('#Item').val(),
+            Location: $('#Location').val(),
+          })
+          grid.updateRow(id, { 
+            'ID': id, 
+            'Category': $('#Category').val(), 
+            'Item': $('#Item').val(), 
+            'Location': $('#Location').val()
+          });
+        } 
+        else {
+            db.collection('위치').doc((grid.count(true)+1).toString()).set({
+              Category: $('#Category').val(),
+              Item: $('#Item').val(),
+              Location: $('#Location').val(),
+            });
+          grid.addRow({ 
+            'ID': grid.count(true) + 1, 
+            'Category': $('#Category').val(), 
+            'Item': $('#Item').val(),
+            'Location': $('#Location').val(),
+          });
+        }
+        dialog.close();
+      }
+
+      $('#btnAdd').on('click', function () {
+        $('#ID').val('');
+        $('#Category').val('');
+        $('#Item').val('');
+        $('#Location').val('');
+        dialog.open('Add');
+      });
+      $('#btnSave').on('click', Save);
+      $('#btnCancel').on('click', function () {
+        dialog.close();
+      });
+      $('#btnSearch').on('click', function () {
+        grid.reload({ page: 1, Name: $('#txtName').val(), PlaceOfBirth: $('#txtPlaceOfBirth').val() });
+      });
+      $('#btnClear').on('click', function () {
+        $('#txtName').val('');
+        $('#txtPlaceOfBirth').val('');
+        grid.reload({ page: 1, Name: $('#txtName').val(), PlaceOfBirth: $('#txtPlaceOfBirth').val() });
+      });
+    })
+
   });
 </script>
 </body>
