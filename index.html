@@ -150,6 +150,7 @@
   <script type="text/javascript" src="./vendor/jquery/checkbox.js"></script>
   <script src="https://www.gstatic.com/firebasejs/7.14.4/firebase-analytics.js"></script>
 
+
   <!-- Menu Toggle Script -->
   <script>
     $("#menu-toggle").click(function(e) {
@@ -162,6 +163,7 @@
   </script>
   <script type="text/javascript">
     $(document).ready(function () {
+
     var grid, dialog;
     var data = [];
 
@@ -218,7 +220,7 @@
           // productList.appendChild(d);
         }
       })
-
+      
       grid = $('#grid').grid({
         primaryKey: 'ID',
         dataSource: data,
@@ -272,7 +274,9 @@
       }
       function Delete(e) {
         if (confirm('Are you sure?')) {
-          db.collection('대여및반납').doc(e.data.id.toString()).delete();
+
+        db.collection('대여및반납').doc(e.data.id.toString()).delete();
+
           grid.removeRow(e.data.id);
         }
       }
@@ -352,9 +356,7 @@
         grid.reload({ page: 1, Name: $('#txtName').val(), PlaceOfBirth: $('#txtPlaceOfBirth').val() });
       });
     })
-
-
-    });
+ });
   </script>
 </body>
 
