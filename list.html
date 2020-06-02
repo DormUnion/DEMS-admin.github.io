@@ -34,7 +34,8 @@
       <div class="list-group list-group-flush">
         <a href="./index.html" class="list-group-item list-group-item-action bg-light">물품관리 내역</a>
         <a href="./list.html" class="list-group-item list-group-item-action bg-dark active">물품 리스트</a>
-        <a href="./location.html" class="list-group-item list-group-item-action bg-light">물품 물품</a>
+        <a href="./location.html" class="list-group-item list-group-item-action bg-light">물품 위치</a>
+        <a href="https://docs.google.com/document/d/1VwoDJ7murXERp40NkSfLysPulMXHkHMSxEZ_gIiRA4s/edit?usp=sharing" class="list-group-item list-group-item-action bg-light">매뉴얼</a>
         <!-- <a href="#" class="list-group-item list-group-item-action bg-light">Events</a>
         <a href="#" class="list-group-item list-group-item-action bg-light">Profile</a>
         <a href="#" class="list-group-item list-group-item-action bg-light">Status</a> -->
@@ -53,7 +54,7 @@
         </div>
         
         <div class="text_title">
-          <p>&nbsp&nbsp&nbsp 자치회 물품 리스트 </p>
+          <p>&nbsp&nbsp&nbsp 물품 리스트 </p>
         </div>
         
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -84,34 +85,34 @@
         <div data-role="body">
           <input type="hidden" id="ID" />
           <div class="">
-            <input type="text" class="gj-textbox-md" id="Category" placeholder="Category...">
+            <input type="text" class="gj-textbox-md" id="Category" placeholder="분류...">
           </div>
           <div class="gj-margin-top-20">
-            <input type="text" class="gj-textbox-md" id="Name" placeholder="Name..." />
+            <input type="text" class="gj-textbox-md" id="Name" placeholder="물품명..." />
           </div>
           <div class="">
-            <input type="text" class="gj-textbox-md" id="Total" placeholder="Total...">
+            <input type="text" class="gj-textbox-md" id="Total" placeholder="전체수량...">
           </div>
           <div class="">
-            <input type="text" class="gj-textbox-md" id="Available" placeholder="Available...">
+            <input type="text" class="gj-textbox-md" id="Available" placeholder="현재수량...">
           </div>
           <div class="">
-            <input type="text" class="gj-textbox-md" id="Period" placeholder="Period...">
+            <input type="text" class="gj-textbox-md" id="Period" placeholder="대여기간...">
           </div>
           <div class="">
-            <input type="text" class="gj-textbox-md" id="Cert" placeholder="Cert...">
+            <input type="text" class="gj-textbox-md" id="Cert" placeholder="보증금...">
           </div>
           <div class="">
-            <input type="text" class="gj-textbox-md" id="Rental" placeholder="Rental...">
+            <input type="text" class="gj-textbox-md" id="Rental" placeholder="대여료...">
           </div>
           <div class="">
-            <input type="text" class="gj-textbox-md" id="Late" placeholder="Late...">
+            <input type="text" class="gj-textbox-md" id="Late" placeholder="연체료...">
           </div>
           <div class="">
-            <input type="text" class="gj-textbox-md" id="Etc" placeholder="Etc...">
+            <input type="text" class="gj-textbox-md" id="Etc" placeholder="비고...">
           </div>
         </div>
-
+        
         <div data-role="footer">
           <button type="button" id="btnSave" class="gj-button-md">Save</button>
           <button type="button" id="btnCancel" class="gj-button-md">Cancel</button>
@@ -150,7 +151,7 @@
 </script>
   <script type="text/javascript">
     $(document).ready(function () {
-    var firebaseConfig = {
+ var firebaseConfig = {
       apiKey: "AIzaSyAqwpkJRTaDGkSFcRcc8kx2f6M5foeEFEE",
       authDomain: "dems-2a183.firebaseapp.com",
       databaseURL: "https://dems-2a183.firebaseio.com",
@@ -167,6 +168,7 @@
 
     var grid, dialog;
     var data = [];
+
 
     db.collection('물품').get().then((snapshot) => {
       let changes = snapshot.docChanges();
@@ -197,14 +199,12 @@
           ],
           pager: { limit: 5 }
         });
-
         dialog = $('#dialog').dialog({
           autoOpen: false,
           resizable: false,
           modal: true,
           width: 360
         });
-
         function Edit(e) {
           $('#ID').val(e.data.id);
           $('#Category').val(e.data.record.Category);
@@ -218,7 +218,6 @@
           $('#Etc').val(e.data.record.Etc);
           dialog.open('Edit Items');
         }
-
         function Delete(e) {
           if (confirm('Are you sure?')) {
             db.collection('물품').doc(e.data.id.toString()).delete();
@@ -239,7 +238,18 @@
             Late: $('#Late').val(),
             Etc: $('#Etc').val(),  
           })
-            grid.updateRow(id, { 'ID': id, 'Name': $('#Name').val(), 'PlaceOfBirth': $('#PlaceOfBirth').val() });
+            grid.updateRow(id, { 
+              'ID': id, 
+              'Category': $('#Category').val(),
+              'Name': $('#Name').val(),
+              'Total': $('#Total').val(),
+              'Available': $('#Available').val(),
+              'Period': $('#Period').val(),
+              'Cert': $('#Cert').val(),
+              'Rental': $('#Rental').val(),
+              'Late': $('#Late').val(),
+              'Etc': $('#Etc').val(),
+              });
           } else {
           db.collection('물품').doc((grid.count(true)+1).toString()).set({
             Category: $('#Category').val(),
@@ -252,7 +262,18 @@
             Late: $('#Late').val(),
             Etc: $('#Etc').val(),  
           })
-            grid.addRow({ 'ID': grid.count(true) + 1, 'Name': $('#Name').val(), 'PlaceOfBirth': $('#PlaceOfBirth').val() });
+            grid.addRow({
+              'ID': grid.count(true) + 1, 
+              'Category': $('#Category').val(),
+              'Name': $('#Name').val(),
+              'Total': $('#Total').val(),
+              'Available': $('#Available').val(),
+              'Period': $('#Period').val(),
+              'Cert': $('#Cert').val(),
+              'Rental': $('#Rental').val(),
+              'Late': $('#Late').val(),
+              'Etc': $('#Etc').val(),  
+              });
           }
           dialog.close();
         }
@@ -282,7 +303,6 @@
           grid.reload({ page: 1, Name: $('#txtName').val(), PlaceOfBirth: $('#txtPlaceOfBirth').val() });
         });
       })
-
 
     });
   </script>

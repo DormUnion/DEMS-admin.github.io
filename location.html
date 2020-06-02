@@ -33,8 +33,9 @@
 
     <div class="list-group list-group-flush">
       <a href="./index.html" class="list-group-item list-group-item-action bg-light">물품관리 내역</a>
-      <a href="./list.html" class="list-group-item list-group-item-action bg-dark active">물품 리스트</a>
-      <a href="./location.html" class="list-group-item list-group-item-action bg-light">물품 위치</a>
+      <a href="./list.html" class="list-group-item list-group-item-action bg-light">물품 리스트</a>
+      <a href="./location.html" class="list-group-item list-group-item-action bg-dark active">물품 위치</a>
+      <a href="https://docs.google.com/document/d/1VwoDJ7murXERp40NkSfLysPulMXHkHMSxEZ_gIiRA4s/edit?usp=sharing" class="list-group-item list-group-item-action bg-light">매뉴얼</a>
       <!-- <a href="#" class="list-group-item list-group-item-action bg-light">Events</a>
       <a href="#" class="list-group-item list-group-item-action bg-light">Profile</a>
       <a href="#" class="list-group-item list-group-item-action bg-light">Status</a> -->
@@ -53,7 +54,7 @@
       </div>
 
       <div class="text_title">
-        <p>&nbsp&nbsp&nbsp 자치회 물품 리스트 </p>
+        <p>&nbsp&nbsp&nbsp 물품 위치 </p>
       </div>
 
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -84,13 +85,13 @@
       <div data-role="body">
         <input type="hidden" id="ID" />
         <div class="">
-          <input type="text" class="gj-textbox-md" id="Category" placeholder="Category...">
+          <input type="text" class="gj-textbox-md" id="Category" placeholder="분류...">
         </div>
         <div class="gj-margin-top-20">
-          <input type="text" class="gj-textbox-md" id="Item" placeholder="Item..." />
+          <input type="text" class="gj-textbox-md" id="Item" placeholder="물품이름..." />
         </div>
         <div class="">
-          <input type="text" class="gj-textbox-md" id="Location" placeholder="Location...">
+          <input type="text" class="gj-textbox-md" id="Location" placeholder="위치...">
         </div>
       </div>
 
@@ -132,7 +133,7 @@
 </script>
 <script type="text/javascript">
   $(document).ready(function () {
-    var firebaseConfig = {
+var firebaseConfig = {
       apiKey: "AIzaSyAqwpkJRTaDGkSFcRcc8kx2f6M5foeEFEE",
       authDomain: "dems-2a183.firebaseapp.com",
       databaseURL: "https://dems-2a183.firebaseio.com",
@@ -150,16 +151,16 @@
     var grid, dialog;
     var data = [];
 
+
     db.collection('위치').get().then((snapshot) => {
       let changes = snapshot.docChanges();
-        changes.forEach(change => {
-            // console.log(change.doc.id);
-            // console.log(doc.data())
-          if(change.type == 'added'){
-            data.push({ 'ID': change.doc.id, 'Category': change.doc.data().Category, 'Item': change.doc.data().Item, 'Location': change.doc.data().Location});
-          }
-    
-        })
+      changes.forEach(change => {
+          // console.log(change.doc.id);
+          // console.log(doc.data())
+        if(change.type == 'added'){
+          data.push({ 'ID': change.doc.id, 'Category': change.doc.data().Category, 'Item': change.doc.data().Item, 'Location': change.doc.data().Location});
+        }  
+      })
 
       grid = $('#grid').grid({
         primaryKey: 'ID',
@@ -180,7 +181,6 @@
         modal: true,
         width: 360
       });
-
       function Edit(e) {
         $('#ID').val(e.data.id);
         $('#Category').val(e.data.record.Name);
@@ -188,14 +188,12 @@
         $('#Location').val(e.data.record.PNum);
         dialog.open('Edit');
       }
-
       function Delete(e) {
         if (confirm('Are you sure?')) {
           db.collection('위치').doc(e.data.id.toString()).delete();
           grid.removeRow(e.data.id);
         }
       }
-
       function Save() {
         console.log(grid.count(true));
         if ($('#ID').val()) {
@@ -205,17 +203,29 @@
             Item: $('#Item').val(),
             Location: $('#Location').val(),
           })
-          grid.updateRow(id, { 'ID': id, 'Category': $('#Category').val(), 'PlaceOfBirth': $('#PlaceOfBirth').val() });
-        } else {
+          grid.updateRow(id, { 
+            'ID': id, 
+            'Category': $('#Category').val(), 
+            'Item': $('#Item').val(), 
+            'Location': $('#Location').val()
+          });
+        } 
+        else {
             db.collection('위치').doc((grid.count(true)+1).toString()).set({
               Category: $('#Category').val(),
               Item: $('#Item').val(),
               Location: $('#Location').val(),
             });
-          grid.addRow({ 'ID': grid.count(true) + 1, 'Category': $('#Category').val(), 'PlaceOfBirth': $('#PlaceOfBirth').val() });
+          grid.addRow({ 
+            'ID': grid.count(true) + 1, 
+            'Category': $('#Category').val(), 
+            'Item': $('#Item').val(),
+            'Location': $('#Location').val(),
+          });
         }
         dialog.close();
       }
+
       $('#btnAdd').on('click', function () {
         $('#ID').val('');
         $('#Category').val('');
@@ -236,6 +246,7 @@
         grid.reload({ page: 1, Name: $('#txtName').val(), PlaceOfBirth: $('#txtPlaceOfBirth').val() });
       });
     })
+
   });
 </script>
 </body>
