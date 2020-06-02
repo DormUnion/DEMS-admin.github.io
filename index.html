@@ -7,8 +7,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <meta name="description" content="">
   <meta name="author" content="">
-  <script src="https://www.gstatic.com/firebasejs/7.14.4/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/7.14.4/firebase-firestore.js"></script>
 
   <title>DEMS</title>
 
@@ -21,21 +19,44 @@
   <!-- Custom styles for this template -->
   <link href="css/simple-sidebar.css" rel="stylesheet">
 
-  <div class="navbar navbar-dark bg-dark">
-    <!-- Navbar content -->
-    <div class="input-group">
-      <span class="navbar-brand mb-0 h1">DEMS: Dormitory union Equipment Management System</span>
-      
-      <div class="input-group-append form-control-all">
-        <a class="navbar-brand btn_electric:hover" target="blank" href="https://docs.google.com/document/d/1qJT5WRlt14vhMCA0wEtWoKtxtDG8xJul4OpETx7TGvM/edit ">매뉴얼</a>
-        <input id="txtName" type="text" class="form-control border-dark " placeholder="Search">
-        <button id="btnSearch" class="btn btn-outline-secondary form-control-btn" type="button"><i class="fa fa-search"></i>Enter</button>
-        <button id="btnClear" class="btn btn-outline-secondary form-control-btn" type="button"><i class="fa fa-search"></i>Reset</button>
-        
+</head>
+
+<body>
+  <div class="d-flex" id="wrapper">
+
+    <!-- Sidebar -->
+    <div class="bg-light border-right" id="sidebar-wrapper">
+      <div class="sidebar-heading">DEMS </div>
+      <p>&nbsp&nbsp&nbsp&nbsp&nbspDormitory union Equipment<br>&nbsp&nbsp&nbsp&nbsp&nbspManagement System</p>
+
+      <div class="list-group list-group-flush">
+        <a href="./index.html" class="list-group-item list-group-item-action bg-dark active">물품관리 내역</a>
+        <a href="./list.html" class="list-group-item list-group-item-action bg-light">물품 리스트</a>
+        <a href="./location.html" class="list-group-item list-group-item-action bg-light">물품 위치</a>
+        <a href="https://docs.google.com/document/d/1VwoDJ7murXERp40NkSfLysPulMXHkHMSxEZ_gIiRA4s/edit?usp=sharing" target="blank" class="list-group-item list-group-item-action bg-light">매뉴얼</a>
       </div>
+    </div>
+    <!-- /#sidebar-wrapper -->
 
+    <!-- Page Content -->
+    <div id="page-content-wrapper">
 
-      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <nav class="navbar navbar-expand-lg navbar-light bg-light border-bottom">
+        <!-- <button class="btn btn-primary" id="menu-toggle">Menu</button> -->
+
+        <div>
+          <button id="btnAdd" class="button_base btn_electric">추가</button>
+        </div>
+
+        <div class="text_title">
+          <p>&nbsp&nbsp&nbsp 물품관리 내역 </p>
+        </div>
+
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
           <ul class="navbar-nav ml-auto mt-2 mt-lg-0">
             <form class="form-inline ml-auto">
               <div class="input-group">
@@ -48,27 +69,52 @@
             </form>
           </ul>
         </div>
+      </nav>
+      <!-- Editable table -->
+      <div class="gj-clear-both"></div>
+      <div class="gj-margin-top-10">
+        <table id="grid"></table>
+      </div>
 
+      <div id="dialog" class="gj-display-none">
+        <div data-role="body">
+          <input type="hidden" id="ID" />
+          <div class="">
+            <input type="text" class="gj-textbox-md" id="Name" placeholder="이름...">
+          </div>
+          <div class="gj-margin-top-20">
+            <input type="text" class="gj-textbox-md" id="SID" placeholder="학번..." />
+          </div>
+          <div class="">
+            <input type="text" class="gj-textbox-md" id="PNum" placeholder="휴대폰번호...">
+          </div>
+          <div class="">
+            <input type="text" class="gj-textbox-md" id="Item" placeholder="물품...">
+          </div>
+          <div class="">
+            <input type="text" class="gj-textbox-md" id="Get" placeholder="빌린날짜...">
+          </div>
+          <div class="">
+            <input type="text" class="gj-textbox-md" id="Back" placeholder="반납날짜...">
+          </div>
+          <div class="">
+            <input type="text" class="gj-textbox-md" id="Remain" placeholder="남은일수...">
+          </div>
+          <div class="">
+            <input type="text" class="gj-textbox-md" id="Status" placeholder="반납상태...">
+          </div>
+        </div>
 
-
+        <div data-role="footer">
+          <button type="button" id="btnSave" class="gj-button-md">Save</button>
+          <button type="button" id="btnCancel" class="gj-button-md">Cancel</button>
+        </div>
+      </div>
+      <!-- Editable table -->
+      <!-- /#page-content-wrapper -->
     </div>
-    
   </div>
-</head>
-
-<body>
-  <!-- Page Content -->
-  <div id="page-content-wrapper">
-    <!-- Editable table -->
-    <div class="gj-clear-both"></div>
-    <div class="gj-margin-top-10">
-      <table id="grid"></table>
-    </div>
-
-
-    <!-- Editable table -->
-    <!-- /#page-content-wrapper -->
-  </div>
+  <!-- /#wrapper -->
 
   <!-- Footer -->
   <footer class="page-footer font-small blue">
@@ -83,7 +129,6 @@
   <script src="https://unpkg.com/gijgo@1.9.13/js/gijgo.min.js" type="text/javascript"></script>
   <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
   <script type="text/javascript" src="./vendor/jquery/checkbox.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/7.14.4/firebase-analytics.js"></script>
 
   <!-- Menu Toggle Script -->
   <script>
@@ -97,67 +142,87 @@
   </script>
   <script type="text/javascript">
     $(document).ready(function () {
-      var firebaseConfig = {
-        apiKey: "AIzaSyAqwpkJRTaDGkSFcRcc8kx2f6M5foeEFEE",
-        authDomain: "dems-2a183.firebaseapp.com",
-        databaseURL: "https://dems-2a183.firebaseio.com",
-        projectId: "dems-2a183",
-        storageBucket: "dems-2a183.appspot.com",
-        messagingSenderId: "554123402821",
-        appId: "1:554123402821:web:12cd312639412b240d8d2c",
-        measurementId: "G-PKCJ378JY8"
-      };
-      // Initialize Firebase
-      firebase.initializeApp(firebaseConfig);
-      firebase.analytics();
-      const db = firebase.firestore();
-
-      var grid;
-      var data = [];
-      db.collection('물품').orderBy('Category').get().then((snapshot) => {
-      let changes = snapshot.docChanges();
-        changes.forEach(change => {
-          var late;
-          (change.doc.data().Late > 0) ? late = 'late: 하루당'+change.doc.data().Late+'\n' : late = '';
-
-          if(change.type == 'added'){
-            data.push({ 
-              'Category': change.doc.data().Category, 
-              'Item': change.doc.data().Name, 
-              'Stock': change.doc.data().Available, 
-              'RentalPeriod': change.doc.data().Period, 
-              'Deposit': change.doc.data().Cert, 
-              'RentalFee': change.doc.data().Rental,
-              'Remark': late + change.doc.data().Etc });
-          }
-        })
-
-          grid = $('#grid').grid({
-          primaryKey: 'Item',
-          dataSource: data,
-          columns: [
-          { field: 'Category', width: 100, title: '카테고리', align: 'center', sortable: true },
-          { field: 'Item', width: 250, title: '물품명', align: 'center', sortable: true },
-          { field: 'Stock', title: '재고', align: 'center', sortable: true },
-          { field: 'RentalPeriod', width: 150, title: '대여기간(일)', align: 'center', sortable: true },
-          { field: 'Deposit', width: 150, title: '보증금(원)', align: 'center', sortable: true },
-          { field: 'RentalFee', title: '대여료(원)', align: 'center', sortable: true },
-          { field: 'Remark', title: '비고', align: 'center', sortable: true }
-          ],
-          pager: { limit: 10 }
-        });
-
-        $('#btnSearch').on('click', function () {
-          grid.reload({ page: 1, Name: $('#txtName').val(), PlaceOfBirth: $('#txtPlaceOfBirth').val() });
-        });
-        $('#btnClear').on('click', function () {
-          $('#txtName').val('');
-          $('#txtPlaceOfBirth').val('');
-          grid.reload({ page: 1, Name: $('#txtName').val(), PlaceOfBirth: $('#txtPlaceOfBirth').val() });
-        });
-      })
-
-      
+      var data, grid, dialog;
+      data = [
+      { 'ID': 1, 'Name': '김태은', 'SID': '21100000', 'PNum': '010-0000-0000', 'Item': '안경', 'Get': '2020-01-01', 'Back': '2020-01-04', 'Remain': '3','Status': '완납'},
+      { 'ID': 2, 'Name': 'Tom Holland', 'SID': '21200000', 'PNum': '010-0000-0000', 'Item': '성경책', 'Get': '2020-02-02', 'Back': '2020-02-05', 'Remain': '3','Status': '완납'},
+      { 'ID': 3, 'Name': '박', 'SID': '21300000', 'PNum': '010-0000-0000', 'Item': '마이크', 'Get': '2020-03-03', 'Back': '2020-04-05', 'Remain': '20','Status': '미납'},
+      { 'ID': 4, 'Name': '이', 'SID': '21400000', 'PNum': '010-0000-0000', 'Item': '물', 'Get': '2020-04-04', 'Back': '2020-06-05', 'Remain': '60','Status': '미납'}
+      ];
+      grid = $('#grid').grid({
+        primaryKey: 'ID',
+        dataSource: data,
+        columns: [
+        { field: 'ID', width: 56 },
+        { field: 'Name', width: 100, title: '이름', align: 'center', sortable: true },
+        { field: 'SID', title: '학번', align: 'center', sortable: true },
+        { field: 'PNum', width: 150, title: '휴대폰번호', align: 'center', sortable: true },
+        { field: 'Item', width: 150, title: '물품', align: 'center', sortable: true },
+        { field: 'Get', title: '빌린날짜', align: 'center', sortable: true },
+        { field: 'Back', title: '반납날짜', align: 'center', sortable: true },
+        { field: 'Remain', title: '남은일수', align: 'center', sortable: true },
+        { field: 'Status', title: '반납상태', align: 'center', sortable: true },
+        { width: 64, tmpl: '<span class="material-icons gj-cursor-pointer">edit</span>', align: 'center', events: { 'click': Edit } },
+        { width: 64, tmpl: '<span class="material-icons gj-cursor-pointer">delete</span>', align: 'center', events: { 'click': Delete } }
+        ],
+        pager: { limit: 5 }
+      });
+      dialog = $('#dialog').dialog({
+        autoOpen: false,
+        resizable: false,
+        modal: true,
+        width: 360
+      });
+      function Edit(e) {
+        $('#ID').val(e.data.id);
+        $('#Name').val(e.data.record.Name);
+        $('#SID').val(e.data.record.SID);
+        $('#PNum').val(e.data.record.PNum);
+        $('#Item').val(e.data.record.Item);
+        $('#Get').val(e.data.record.Get);
+        $('#Back').val(e.data.record.Back);
+        $('#Remain').val(e.data.record.Remain);
+        $('#Status').val(e.data.record.Status);
+        dialog.open('Edit');
+      }
+      function Delete(e) {
+        if (confirm('Are you sure?')) {
+          grid.removeRow(e.data.id);
+        }
+      }
+      function Save() {
+        if ($('#ID').val()) {
+          var id = parseInt($('#ID').val());
+          grid.updateRow(id, { 'ID': id, 'Name': $('#Name').val(), 'PlaceOfBirth': $('#PlaceOfBirth').val() });
+        } else {
+          grid.addRow({ 'ID': grid.count(true) + 1, 'Name': $('#Name').val(), 'PlaceOfBirth': $('#PlaceOfBirth').val() });
+        }
+        dialog.close();
+      }
+      $('#btnAdd').on('click', function () {
+        $('#ID').val('');
+        $('#Name').val('');
+        $('#SID').val('');
+        $('#PNum').val('');
+        $('#Item').val('');
+        $('#Get').val('');
+        $('#Back').val('');
+        $('#Remain').val('');
+        $('#Status').val('');
+        dialog.open('Add');
+      });
+      $('#btnSave').on('click', Save);
+      $('#btnCancel').on('click', function () {
+        dialog.close();
+      });
+      $('#btnSearch').on('click', function () {
+        grid.reload({ page: 1, Name: $('#txtName').val(), PlaceOfBirth: $('#txtPlaceOfBirth').val() });
+      });
+      $('#btnClear').on('click', function () {
+        $('#txtName').val('');
+        $('#txtPlaceOfBirth').val('');
+        grid.reload({ page: 1, Name: $('#txtName').val(), PlaceOfBirth: $('#txtPlaceOfBirth').val() });
+      });
     });
   </script>
 </body>
