@@ -380,7 +380,8 @@
       grid.reload({ page: 1, Name: $('#txtName').val()});
     });
     $('#btnClear').on('click', function () {
-      show();
+      $('#txtName').val('');
+      grid.reload({ page: 1, Name: $('#txtName').val()});
     });
  });
   </script>
