@@ -150,7 +150,6 @@
   <script type="text/javascript" src="./vendor/jquery/checkbox.js"></script>
   <script src="https://www.gstatic.com/firebasejs/7.14.4/firebase-analytics.js"></script>
 
-
   <!-- Menu Toggle Script -->
   <script>
     $("#menu-toggle").click(function(e) {
@@ -163,12 +162,8 @@
   </script>
   <script type="text/javascript">
     $(document).ready(function () {
-
     var grid, dialog;
     var data = [];
-    var isFirst = true;
-    var snapsize, cnt = 0;
-    var nextID = 0;
 
     var firebaseConfig = {
       apiKey: "AIzaSyAqwpkJRTaDGkSFcRcc8kx2f6M5foeEFEE",
@@ -196,10 +191,6 @@
 
     db.collection('대여및반납').orderBy('Status', 'asc').onSnapshot((snapshot) => {
       let changes = snapshot.docChanges();
-      if(isFirst){
-        snapsize = snapshot.size;
-        isFirst = false;
-      }
       changes.forEach(change => {
         if(change.type == 'added'){
           var getTimestamp = change.doc.data().Get.toMillis();
@@ -209,7 +200,7 @@
 
           var remain;
           if(change.doc.data().Status == '미납' ){
-            remain = 7 - Math.ceil((Date.now()/1000 - change.doc.data().Get.seconds)/216000);
+            remain = Math.ceil((Date.now()/1000 - change.doc.data().Get.seconds)/216000);
             back = "";
           }
           else{
@@ -220,19 +211,14 @@
           }
 
           data.push({ 'ID': change.doc.id, 'Name': change.doc.data().Name, 'SID': change.doc.data().SID, 'PNum': change.doc.data().PNum, 'Item': change.doc.data().Item, 'Get': get, 'Back': back, 'Remain': remain,'Status': change.doc.data().Status});
-          cnt++;
-          if(cnt >= snapsize) {
-            buildGrid(data);
-            // grid.reload();
-          }
-
-          if(parseInt(change.doc.id) > nextID - 1) nextID = parseInt(change.doc.id) + 1;
+          
+          // var d = [];
+          // d.push({ 'ID': change.doc.id, 'Name': change.doc.data().Name, 'SID': change.doc.data().SID, 'PNum': change.doc.data().PNum, 'Item': change.doc.data().Item, 'Get': change.doc.data().Get, 'Back': change.doc.data().Back, 'Remain': change.doc.data().Reamin,'Status': change.doc.data().Status});
+          // buildGrid();
+          // productList.appendChild(d);
         }
       })
-    })
 
-    
-    function buildGrid(data){
       grid = $('#grid').grid({
         primaryKey: 'ID',
         dataSource: data,
@@ -252,125 +238,123 @@
         ],
         pager: { limit: 5 }
       });
-    }
-    dialog = $('#dialog').dialog({
-      autoOpen: false,
-      resizable: false,
-      modal: true,
-      width: 360
-    });
+      dialog = $('#dialog').dialog({
+        autoOpen: false,
+        resizable: false,
+        modal: true,
+        width: 360
+      });
 
-    dialog2 = $('#dialog2').dialog({
-      autoOpen: false,
-      resizable: false,
-      modal: true,
-      width: 360
-    });
+      dialog2 = $('#dialog2').dialog({
+        autoOpen: false,
+        resizable: false,
+        modal: true,
+        width: 360
+      });
 
-    function Check(e) {
-      $('#Admin').val('');
-      $('#Etc').val('');
-      dialog2.open('Check');
-    }
-
-    function Edit(e) {
-      $('#ID').val(e.data.id);
-      $('#Name').val(e.data.record.Name);
-      $('#SID').val(e.data.record.SID);
-      $('#PNum').val(e.data.record.PNum);
-      $('#Item').val(e.data.record.Item);
-      $('#Get').val(e.data.record.Get);
-      $('#Back').val(e.data.record.Back);
-      $('#Remain').val(e.data.record.Remain);
-      $('#Status').val(e.data.record.Status);
-      dialog.open('Edit');
-    }
-    function Delete(e) {
-      if (confirm('Are you sure?')) {
-
-        db.collection('대여및반납').doc(e.data.id.toString()).delete();
-
-        grid.removeRow(e.data.id);
+      function Check(e) {
+        $('#Admin').val('');
+        $('#Etc').val('');
+        dialog2.open('Check');
       }
-    }
-    function Save() {
-      if ($('#ID').val()) { 
-        var id = parseInt($('#ID').val());
-        db.collection('대여및반납').doc(id.toString()).set({
-          Name: $('#Name').val(),
-          SID: Number($('#SID').val()),
-          PNum: $('#PNum').val(),
-          Item: $('#Item').val(),
-          Get: $('#Get').val(),
-          Back: $('#Back').val(),
-          Remain: Number($('#Remain').val()),
-          Status: $('#Status').val(),
-        });
-        grid.updateRow(id, { 
-          'ID': id,
-          'Name': $('#Name').val(), 
-          'SID': $('#SID').val(),
-          'PNum': $('#PNum').val(),
-          'Item': $('#Item').val(),
-          'Get': $('#Get').val(),
-          'Back': $('#Back').val(),
-          'Remain': $('#Remain').val(),
-          'Status': $('#Status').val(),
-        });
-      } else {
-        var curDate = new Date(Date.now());
-        db.collection('대여및반납').doc(nextID.toString()).set({
-          Name: $('#Name').val(),
-          SID: Number($('#SID').val()),
-          PNum: $('#PNum').val(),
-          Item: $('#Item').val(),
-          Get: firebase.firestore.Timestamp.now(),
-          // Back: firebase.firestore.Timestamp.now(),
-          // Remain: Number($('#Remain').val()),
-          Status: '미납',
-          // Status: $('#Status').val(),
-        });
-        grid.addRow({
-          'ID': nextID,
-          'Name': $('#Name').val(), 
-          'SID': Number($('#SID').val()),
-          'PNum': $('#PNum').val(),
-          'Item': $('#Item').val(),
-          'Get': date_to_str(curDate),
-          // 'Back': date_to_str(Date.now()),
-          // 'Get': $('#Get').val(),
-          // 'Back': $('#Back').val(),
-          'Remain': 7,
-          'Status': '미납',
-        });
+
+      function Edit(e) {
+        $('#ID').val(e.data.id);
+        $('#Name').val(e.data.record.Name);
+        $('#SID').val(e.data.record.SID);
+        $('#PNum').val(e.data.record.PNum);
+        $('#Item').val(e.data.record.Item);
+        $('#Get').val(e.data.record.Get);
+        $('#Back').val(e.data.record.Back);
+        $('#Remain').val(e.data.record.Remain);
+        $('#Status').val(e.data.record.Status);
+        dialog.open('Edit');
       }
-      dialog.close();
-    }
-    $('#btnAdd').on('click', function () {
-      $('#ID').val('');
-      $('#Name').val('');
-      $('#SID').val('');
-      $('#PNum').val('');
-      $('#Item').val('');
-      $('#Get').val('');
-      $('#Back').val('');
-      $('#Remain').val('');
-      $('#Status').val('');
-      dialog.open('Add');
+      function Delete(e) {
+        if (confirm('Are you sure?')) {
+          db.collection('대여및반납').doc(e.data.id.toString()).delete();
+          grid.removeRow(e.data.id);
+        }
+      }
+      function Save() {
+        if ($('#ID').val()) {
+          var id = parseInt($('#ID').val());
+          db.collection('대여및반납').doc(id.toString()).set({
+            Name: $('#Name').val(),
+            SID: Number($('#SID').val()),
+            PNum: $('#PNum').val(),
+            Item: $('#Item').val(),
+            Get: $('#Get').val(),
+            Back: $('#Back').val(),
+            Remain: Number($('#Remain').val()),
+            Status: $('#Status').val(),
+          });
+          grid.updateRow(id, { 
+            'ID': id,
+            'Name': $('#Name').val(), 
+            'SID': $('#SID').val(),
+            'PNum': $('#PNum').val(),
+            'Item': $('#Item').val(),
+            'Get': $('#Get').val(),
+            'Back': $('#Back').val(),
+            'Remain': $('#Remain').val(),
+            'Status': $('#Status').val(),
+          });
+        } else {
+          db.collection('대여및반납').doc((grid.count(true)+1).toString()).set({
+            Name: $('#Name').val(),
+            SID: Number($('#SID').val()),
+            PNum: $('#PNum').val(),
+            Item: $('#Item').val(),
+            Get: firebase.firestore.Timestamp.now(),
+            Back: firebase.firestore.Timestamp.now(),
+            Remain: Number($('#Remain').val()),
+            Status: $('#Status').val(),
+          });
+          grid.addRow({ 
+            'ID': grid.count(true) + 1, 
+            'Name': $('#Name').val(), 
+            'SID': Number($('#SID').val()),
+            'PNum': $('#PNum').val(),
+            'Item': $('#Item').val(),
+            // 'Get': date_to_str(Date.now()),
+            // 'Back': date_to_str(Date.now()),
+            'Get': $('#Get').val(),
+            'Back': $('#Back').val(),
+            'Remain': Number($('#Remain').val()),
+            'Status': $('#Status').val(),
+          });
+        }
+        dialog.close();
+      }
+      $('#btnAdd').on('click', function () {
+        $('#ID').val('');
+        $('#Name').val('');
+        $('#SID').val('');
+        $('#PNum').val('');
+        $('#Item').val('');
+        $('#Get').val('');
+        $('#Back').val('');
+        $('#Remain').val('');
+        $('#Status').val('');
+        dialog.open('Add');
+      });
+      $('#btnSave').on('click', Save);
+      $('#btnCancel').on('click', function () {
+        dialog.close();
+      });
+      $('#btnSearch').on('click', function () {
+        grid.reload({ page: 1, Name: $('#txtName').val(), PlaceOfBirth: $('#txtPlaceOfBirth').val() });
+      });
+      $('#btnClear').on('click', function () {
+        $('#txtName').val('');
+        $('#txtPlaceOfBirth').val('');
+        grid.reload({ page: 1, Name: $('#txtName').val(), PlaceOfBirth: $('#txtPlaceOfBirth').val() });
+      });
+    })
+
+
     });
-    $('#btnSave').on('click', Save);
-    $('#btnCancel').on('click', function () {
-      dialog.close();
-    });
-    $('#btnSearch').on('click', function () {
-      grid.reload({ page: 1, Name: $('#txtName').val(), PlaceOfBirth: $('#txtPlaceOfBirth').val() });
-    });
-    $('#btnClear').on('click', function () {
-      $('#txtName').val('');
-      $('#txtPlaceOfBirth').val('');
-      grid.reload({ page: 1, Name: $('#txtName').val(), PlaceOfBirth: $('#txtPlaceOfBirth').val() });
-    });
- });
   </script>
 </body>
 
