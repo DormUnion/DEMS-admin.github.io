@@ -377,7 +377,7 @@
       dialog.close();
     });
     $('#btnSearch').on('click', function () {
-      grid.reload({ page: 1, Name: $('#txtName').val(), PlaceOfBirth: $('#txtPlaceOfBirth').val() });
+      grid.reload({ page: 1, Name: $('#txtName').val(), SID: $('#txtName').val() });
     });
     $('#btnClear').on('click', function () {
       $('#txtName').val('');
