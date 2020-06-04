@@ -204,7 +204,8 @@
         if(change.type == 'added'){
           var getTimestamp = change.doc.data().Get.toMillis();
           var getDate = new Date(getTimestamp);
-          var get = date_to_str(getDate);
+          var get = firebase.firestore.Timestamp.fromDate(getDate);
+          var get_str =  date_to_str(get.toDate());
           var back;
 
           var remain;
@@ -216,10 +217,11 @@
             var backTimestamp = change.doc.data().Back.toMillis();
             var backDate = new Date(backTimestamp);
             remain = 0;
-            back = date_to_str(backDate);
+            back = firebase.firestore.Timestamp.fromDate(backDate);
+            var back_str = date_to_str(back.toDate());
           }
 
-          data.push({ 'ID': change.doc.id, 'Name': change.doc.data().Name, 'SID': change.doc.data().SID, 'PNum': change.doc.data().PNum, 'Item': change.doc.data().Item, 'Get': get, 'Back': back, 'Remain': remain,'Status': change.doc.data().Status});
+          data.push({ 'ID': change.doc.id, 'Name': change.doc.data().Name, 'SID': change.doc.data().SID, 'PNum': change.doc.data().PNum, 'Item': change.doc.data().Item, 'Get': get_str, 'Back': back_str, 'Remain': remain,'Status': change.doc.data().Status});
           cnt++;
           if(cnt >= snapsize) {
             buildGrid(data);
@@ -273,7 +275,19 @@
       dialog2.open('Check');
     }
 
+    function str_to_date(str){
+      var month_name = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+      var year = str.split("-")[0];
+      var month = str.split("-")[1];
+      var day = str.split("-")[2];
+      var month_letter = month_name[month-1]; 
+    
+      var date_str = month_letter + day + ", " + year;
+      return date_str;   
+    }
+
     function Edit(e) {
+      // var time_back = str_to_timestamp(e.data.record.Back);
       $('#ID').val(e.data.id);
       $('#Name').val(e.data.record.Name);
       $('#SID').val(e.data.record.SID);
@@ -301,8 +315,8 @@
           SID: Number($('#SID').val()),
           PNum: $('#PNum').val(),
           Item: $('#Item').val(),
-          Get: $('#Get').val(),
-          Back: $('#Back').val(),
+          Get: firebase.firestore.Timestamp.fromDate(new Date(str_to_date($('#Get').val()))),
+          Back: firebase.firestore.Timestamp.fromDate(new Date(str_to_date($('#Back').val()))),
           Remain: Number($('#Remain').val()),
           Status: $('#Status').val(),
         });
