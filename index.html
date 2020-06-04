@@ -381,7 +381,7 @@
     });
     $('#btnClear').on('click', function () {
       $('#txtName').val('');
-      grid.reload({ page: 1, Name: $('#txtName').val()});
+      buildGrid();
     });
  });
   </script>
