@@ -194,7 +194,7 @@
       return year + "-" + month + "-" + date;
     }
 
-    db.collection('대여및반납').orderBy('Status', 'asc').onSnapshot((snapshot) => {
+    var show = db.collection('대여및반납').orderBy('Status', 'asc').onSnapshot((snapshot) => {
       let changes = snapshot.docChanges();
       if(isFirst){
         snapsize = snapshot.size;
@@ -377,12 +377,10 @@
       dialog.close();
     });
     $('#btnSearch').on('click', function () {
-      grid.reload({ page: 1, Name: $('#txtName').val(), SID: $('#txtName').val() });
+      grid.reload({ page: 1, Name: $('#txtName').val()});
     });
     $('#btnClear').on('click', function () {
-      $('#txtName').val('');
-      $('#txtPlaceOfBirth').val('');
-      grid.reload({ page: 1, Name: $('#txtName').val(), PlaceOfBirth: $('#txtPlaceOfBirth').val() });
+      show();
     });
  });
   </script>
