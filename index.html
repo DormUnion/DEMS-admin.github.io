@@ -326,7 +326,7 @@
       if ($('#Back_edit').val()) { 
         db.collection('대여및반납').doc(id.toString()).set({
           Name: $('#Name_edit').val(),
-          SID: Number($('#SID').val()),
+          SID: Number($('#SID_edit').val()),
           PNum: $('#PNum_edit').val(),
           Item: $('#Item_edit').val(),
           Get: firebase.firestore.Timestamp.fromDate(new Date(str_to_date($('#Get_edit').val()))),
@@ -338,7 +338,7 @@
       else{
         db.collection('대여및반납').doc(id.toString()).set({
           Name: $('#Name_edit').val(),
-          SID: Number($('#SID').val()),
+          SID: Number($('#SID_edit').val()),
           PNum: $('#PNum_edit').val(),
           Item: $('#Item_edit').val(),
           Get: firebase.firestore.Timestamp.fromDate(new Date(str_to_date($('#Get_edit').val()))),
@@ -417,6 +417,7 @@
     });
 
     function Check(e) {
+      $('#ID_check').val(e.data.record.ID);
       $('#Admin').val('');
       $('#Etc').val('');
       dialog_check.open('Check');
@@ -428,31 +429,28 @@
     });
 
     function Save_check() {
-      if ($('#ID_check').val()) { 
-        var id = parseInt($('#ID_check').val());
-        db.collection('대여및반납').doc(id.toString()).set({
-          Name: $('#Name').val(),
-          SID: Number($('#SID').val()),
-          PNum: $('#PNum').val(),
-          Item: $('#Item').val(),
-          Get: firebase.firestore.Timestamp.fromDate(new Date(str_to_date($('#Get').val()))),
-          Back: firebase.firestore.Timestamp.fromDate(new Date(str_to_date($('#Back').val()))),
-          Remain: Number($('#Remain').val()),
-          Status: $('#Status').val(),
-        });
-        grid.updateRow(id, { 
-          'ID': id,
-          'Name': $('#Name').val(), 
-          'SID': $('#SID').val(),
-          'PNum': $('#PNum').val(),
-          'Item': $('#Item').val(),
-          'Get': $('#Get').val(),
-          'Back': $('#Back').val(),
-          'Remain': $('#Remain').val(),
-          'Status': $('#Status').val(),
-        });
-        dialog_edit.close();
-      } 
+      var curDate = new Date(Date.now());
+      var id = parseInt($('#ID_check').val());
+      console.log(id, $('#Admin').val());
+      console.log($('Name_edit').val());
+      db.collection('대여및반납').doc(id.toString()).set({
+        Back: firebase.firestore.Timestamp.now(),
+        Status: '완납',
+        Admin: $('#Admin').val(),
+        Etc: $('#Etc').val(),
+      }, {merge: true });
+      grid.updateRow(id, { 
+        // 'ID': id,
+        // 'Name': $('#Name_check').val(), 
+        // 'SID': $('#SID_check').val(),
+        // 'PNum': $('#PNum_check').val(),
+        // 'Item': $('#Item_check').val(),
+        // 'Get': $('#Get_check').val(),
+        'Back': date_to_str(curDate),
+        // 'Remain': $('#Remain_check').val(),
+        'Status': '완납',
+      });
+      dialog_check.close();
     }
   
     function Delete(e) {
