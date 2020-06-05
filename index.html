@@ -150,7 +150,7 @@
             <input type="text" class="gj-textbox-md" id="PNum_edit" placeholder="휴대폰번호...">
           </div>
           <div class="">
-            <input type="text" class="gj-textbox-md" id="Item_edit" placeholder="물품...">
+            <button type="button" id="Item_edit" class="gj-button-md" style="background-color:grey; color:white; width:315px;"></button>
           </div>
           <div class="">
             <input type="text" class="gj-textbox-md" id="Get_edit" placeholder="빌린날짜...">
@@ -343,7 +343,7 @@
       $('#Name_edit').val(e.data.record.Name);
       $('#SID_edit').val(e.data.record.SID);
       $('#PNum_edit').val(e.data.record.PNum);
-      $('#Item_edit').val(e.data.record.Item);
+      document.getElementById('Item_edit').innerText = e.data.record.Item,
       $('#Get_edit').val(e.data.record.Get);
       $('#Back_edit').val(e.data.record.Back);
       $('#Remain_edit').val(e.data.record.Remain);
@@ -363,7 +363,7 @@
           Name: $('#Name_edit').val(),
           SID: Number($('#SID_edit').val()),
           PNum: $('#PNum_edit').val(),
-          Item: $('#Item_edit').val(),
+          Item: document.getElementById('Item_edit').innerText,
           Get: firebase.firestore.Timestamp.fromDate(new Date(str_to_date($('#Get_edit').val()))),
           Back: firebase.firestore.Timestamp.fromDate(new Date(str_to_date($('#Back_edit').val()))),
           Remain: Number($('#Remain_edit').val()),
@@ -375,7 +375,7 @@
           Name: $('#Name_edit').val(),
           SID: Number($('#SID_edit').val()),
           PNum: $('#PNum_edit').val(),
-          Item: $('#Item_edit').val(),
+          Item: document.getElementById('Item_edit').innerText,
           Get: firebase.firestore.Timestamp.fromDate(new Date(str_to_date($('#Get_edit').val()))),
           Remain: Number($('#Remain_edit').val()),
           Status: $('#Status_edit').val(),
@@ -386,7 +386,7 @@
         'Name': $('#Name_edit').val(), 
         'SID': $('#SID_edit').val(),
         'PNum': $('#PNum_edit').val(),
-        'Item': $('#Item_edit').val(),
+        'Item': document.getElementById('Item_edit').innerText,
         'Get': $('#Get_edit').val(),
         'Back': $('#Back_edit').val(),
         'Remain': $('#Remain_edit').val(),
