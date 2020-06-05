@@ -93,18 +93,6 @@
           <div class="">
             <input type="text" class="gj-textbox-md" id="Item" placeholder="물품...">
           </div>
-          <div class="">
-            <input type="text" class="gj-textbox-md" id="Get" placeholder="빌린날짜...">
-          </div>
-          <div class="">
-            <input type="text" class="gj-textbox-md" id="Back" placeholder="반납날짜...">
-          </div>
-          <div class="">
-            <input type="text" class="gj-textbox-md" id="Remain" placeholder="남은일수...">
-          </div>
-          <div class="">
-            <input type="text" class="gj-textbox-md" id="Status" placeholder="반납상태...">
-          </div>
         </div>
 
         <div data-role="footer">
@@ -194,7 +182,7 @@
       return year + "-" + month + "-" + date;
     }
 
-    db.collection('대여및반납').orderBy('Status', 'asc').onSnapshot((snapshot) => {
+    var show = db.collection('대여및반납').orderBy('Status', 'asc').onSnapshot((snapshot) => {
       let changes = snapshot.docChanges();
       if(isFirst){
         snapsize = snapshot.size;
@@ -377,12 +365,11 @@
       dialog.close();
     });
     $('#btnSearch').on('click', function () {
-      grid.reload({ page: 1, Name: $('#txtName').val(), PlaceOfBirth: $('#txtPlaceOfBirth').val() });
+      grid.reload({ page: 1, Name: $('#txtName').val()});
     });
     $('#btnClear').on('click', function () {
       $('#txtName').val('');
-      $('#txtPlaceOfBirth').val('');
-      grid.reload({ page: 1, Name: $('#txtName').val(), PlaceOfBirth: $('#txtPlaceOfBirth').val() });
+      show;
     });
  });
   </script>
