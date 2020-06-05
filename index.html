@@ -187,7 +187,7 @@
   <script type="text/javascript">
     $(document).ready(function () {
 
-    var grid, dialog;
+    var grid, dialog_add, dialog_edit, dialog_check;
     var data = [];
     var isFirst = true;
     var snapsize, cnt = 0;
@@ -278,14 +278,21 @@
         pager: { limit: 5 }
       });
     }
-    dialog = $('#dialog').dialog({
+    dialog_add = $('#dialog_add').dialog({
       autoOpen: false,
       resizable: false,
       modal: true,
       width: 360
     });
 
-    dialog2 = $('#dialog2').dialog({
+    dialog_check = $('#dialog_check').dialog({
+      autoOpen: false,
+      resizable: false,
+      modal: true,
+      width: 360
+    });
+
+    dialog_edit = $('#dialog_edit').dialog({
       autoOpen: false,
       resizable: false,
       modal: true,
@@ -354,6 +361,7 @@
           'Remain': $('#Remain').val(),
           'Status': $('#Status').val(),
         });
+        dialog_edit.close();
       } else {
         var curDate = new Date(Date.now());
         db.collection('대여및반납').doc(nextID.toString()).set({
@@ -380,8 +388,9 @@
           'Remain': 7,
           'Status': '미납',
         });
+        dialog_add.close();
       }
-      dialog.close();
+  
     }
     $('#btnAdd').on('click', function () {
       $('#ID').val('');
@@ -397,7 +406,9 @@
     });
     $('#btnSave').on('click', Save);
     $('#btnCancel').on('click', function () {
-      dialog.close();
+      dialog_add.close();
+      dialog_edit.close();
+      dialog_check.close();
     });
     $('#btnSearch').on('click', function () {
       grid.reload({ page: 1, Name: $('#txtName').val()});
