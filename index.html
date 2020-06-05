@@ -453,7 +453,7 @@
           'Name': $('#Name_add').val(), 
           'SID': Number($('#SID_add').val()),
           'PNum': $('#PNum_add').val(),
-          'Item': $('#item_add').val(),
+          'Item': document.getElementById('item_add').innerText,
           'Get': date_to_str(curDate),
           'Remain': 7,
           'Status': '미납',
