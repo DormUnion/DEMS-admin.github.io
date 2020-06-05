@@ -82,16 +82,16 @@
         <div data-role="body">
           <input type="hidden" id="ID" />
           <div class="">
-            <input type="text" class="gj-textbox-md" id="Name" placeholder="이름...">
+            <input type="text" class="gj-textbox-md" id="Name_add" placeholder="이름...">
           </div>
           <div class="gj-margin-top-20">
-            <input type="text" class="gj-textbox-md" id="SID" placeholder="학번..." />
+            <input type="text" class="gj-textbox-md" id="SID_add" placeholder="학번..." />
           </div>
           <div class="">
-            <input type="text" class="gj-textbox-md" id="PNum" placeholder="휴대폰번호...">
+            <input type="text" class="gj-textbox-md" id="PNum_add" placeholder="휴대폰번호...">
           </div>
           <div class="">
-            <input type="text" class="gj-textbox-md" id="Item" placeholder="물품...">
+            <input type="text" class="gj-textbox-md" id="Item_add" placeholder="물품...">
           </div>
         </div>
 
@@ -122,28 +122,28 @@
         <div data-role="body">
           <input type="hidden" id="ID" />
           <div class="">
-            <input type="text" class="gj-textbox-md" id="Name" placeholder="이름...">
+            <input type="text" class="gj-textbox-md" id="Name_edit" placeholder="이름...">
           </div>
           <div class="gj-margin-top-20">
-            <input type="text" class="gj-textbox-md" id="SID" placeholder="학번..." />
+            <input type="text" class="gj-textbox-md" id="SID_edit" placeholder="학번..." />
           </div>
           <div class="">
-            <input type="text" class="gj-textbox-md" id="PNum" placeholder="휴대폰번호...">
+            <input type="text" class="gj-textbox-md" id="PNum_edit" placeholder="휴대폰번호...">
           </div>
           <div class="">
-            <input type="text" class="gj-textbox-md" id="Item" placeholder="물품...">
+            <input type="text" class="gj-textbox-md" id="Item_edit" placeholder="물품...">
           </div>
           <div class="">
-            <input type="text" class="gj-textbox-md" id="Get" placeholder="빌린날짜...">
+            <input type="text" class="gj-textbox-md" id="Get_edit" placeholder="빌린날짜...">
           </div>
           <div class="">
-            <input type="text" class="gj-textbox-md" id="Back" placeholder="반납날짜...">
+            <input type="text" class="gj-textbox-md" id="Back_edit" placeholder="반납날짜...">
           </div>
           <div class="">
-            <input type="text" class="gj-textbox-md" id="Remain" placeholder="남은일수...">
+            <input type="text" class="gj-textbox-md" id="Remain_edit" placeholder="남은일수...">
           </div>
           <div class="">
-            <input type="text" class="gj-textbox-md" id="Status" placeholder="반납상태...">
+            <input type="text" class="gj-textbox-md" id="Status_edit" placeholder="반납상태...">
           </div>
         </div>
 
@@ -289,15 +289,15 @@
 
     function Edit(e) {
     
-      $('#ID').val(e.data.record.ID);
-      $('#Name').val(e.data.record.Name);
-      $('#SID').val(e.data.record.SID);
-      $('#PNum').val(e.data.record.PNum);
-      $('#Item').val(e.data.record.Item);
-      $('#Get').val(e.data.record.Get);
-      $('#Back').val(e.data.record.Back);
-      $('#Remain').val(e.data.record.Remain);
-      $('#Status').val(e.data.record.Status);
+      $('#ID_edit').val(e.data.record.ID);
+      $('#Name_edit').val(e.data.record.Name);
+      $('#SID_edit').val(e.data.record.SID);
+      $('#PNum_edit').val(e.data.record.PNum);
+      $('#Item_edit').val(e.data.record.Item);
+      $('#Get_edit').val(e.data.record.Get);
+      $('#Back_edit').val(e.data.record.Back);
+      $('#Remain_edit').val(e.data.record.Remain);
+      $('#Status_edit').val(e.data.record.Status);
       dialog_edit.open('Edit');
     }
 
@@ -310,25 +310,25 @@
       if ($('#ID').val()) { 
         var id = parseInt($('#ID').val());
         db.collection('대여및반납').doc(id.toString()).set({
-          Name: $('#Name').val(),
+          Name: $('#Name_edit').val(),
           SID: Number($('#SID').val()),
-          PNum: $('#PNum').val(),
-          Item: $('#Item').val(),
-          Get: firebase.firestore.Timestamp.fromDate(new Date(str_to_date($('#Get').val()))),
-          Back: firebase.firestore.Timestamp.fromDate(new Date(str_to_date($('#Back').val()))),
-          Remain: Number($('#Remain').val()),
-          Status: $('#Status').val(),
+          PNum: $('#PNum_edit').val(),
+          Item: $('#Item_edit').val(),
+          Get: firebase.firestore.Timestamp.fromDate(new Date(str_to_date($('#Get_edit').val()))),
+          Back: firebase.firestore.Timestamp.fromDate(new Date(str_to_date($('#Back_edit').val()))),
+          Remain: Number($('#Remain_edit').val()),
+          Status: $('#Status_edit').val(),
         });
         grid.updateRow(id, { 
           'ID': id,
-          'Name': $('#Name').val(), 
-          'SID': $('#SID').val(),
-          'PNum': $('#PNum').val(),
-          'Item': $('#Item').val(),
-          'Get': $('#Get').val(),
-          'Back': $('#Back').val(),
-          'Remain': $('#Remain').val(),
-          'Status': $('#Status').val(),
+          'Name': $('#Name_edit').val(), 
+          'SID': $('#SID_edit').val(),
+          'PNum': $('#PNum_edit').val(),
+          'Item': $('#Item_edit').val(),
+          'Get': $('#Get_edit').val(),
+          'Back': $('#Back_edit').val(),
+          'Remain': $('#Remain_edit').val(),
+          'Status': $('#Status_edit').val(),
         });
         dialog_edit.close();
       } 
@@ -342,15 +342,15 @@
     });
 
     $('#btnAdd').on('click', function () {
-      $('#ID').val('');
-      $('#Name').val('');
-      $('#SID').val('');
-      $('#PNum').val('');
-      $('#Item').val('');
-      $('#Get').val('');
-      $('#Back').val('');
-      $('#Remain').val('');
-      $('#Status').val('');
+      $('#ID_add').val('');
+      $('#Name_add').val('');
+      $('#SID_add').val('');
+      $('#PNum_add').val('');
+      $('#Item_add').val('');
+      $('#Get_add').val('');
+      $('#Back_add').val('');
+      $('#Remain_add').val('');
+      $('#Status_add').val('');
       dialog_add.open('Add');
     });
 
@@ -362,19 +362,19 @@
     function Save_add(){
       var curDate = new Date(Date.now());
         db.collection('대여및반납').doc(nextID.toString()).set({
-          Name: $('#Name').val(),
-          SID: Number($('#SID').val()),
-          PNum: $('#PNum').val(),
-          Item: $('#Item').val(),
+          Name: $('#Name_add').val(),
+          SID: Number($('#SID_add').val()),
+          PNum: $('#PNum_add').val(),
+          Item: $('#Item_add').val(),
           Get: firebase.firestore.Timestamp.now(),
           Status: '미납',
         });
         grid.addRow({
           'ID': nextID,
-          'Name': $('#Name').val(), 
-          'SID': Number($('#SID').val()),
-          'PNum': $('#PNum').val(),
-          'Item': $('#Item').val(),
+          'Name': $('#Name_add').val(), 
+          'SID': Number($('#SID_add').val()),
+          'PNum': $('#PNum_add').val(),
+          'Item': $('#Item_add').val(),
           'Get': date_to_str(curDate),
           'Remain': 7,
           'Status': '미납',
