@@ -115,8 +115,8 @@
         </div>
 
         <div data-role="footer">
-          <button type="button" id="btnSave_add" class="gj-button-md">Save</button>
-          <button type="button" id="btnCancel_add" class="gj-button-md">Cancel</button>
+          <button type="button" id="btnSave_item_add" class="gj-button-md">Save</button>
+          <button type="button" id="btnCancel_item_add" class="gj-button-md">Cancel</button>
         </div>
       </div>
 
@@ -407,7 +407,7 @@
       $('#Name_add').val('');
       $('#SID_add').val('');
       $('#PNum_add').val('');
-      $('#Item_add').val('');
+      $('#item_add').val('');
       $('#Get_add').val('');
       $('#Back_add').val('');
       $('#Remain_add').val('');
@@ -433,13 +433,18 @@
       dialog_add.close();
     });
 
+    $('#btnSave_item_add').on('click', Save_item_add);
+    $('#btnCancel_item_add').on('click', function () {
+      dialog_item_add.close();
+    });
+
     function Save_add(){
       var curDate = new Date(Date.now());
         db.collection('대여및반납').doc(nextID.toString()).set({
           Name: $('#Name_add').val(),
           SID: Number($('#SID_add').val()),
           PNum: $('#PNum_add').val(),
-          Item: $('#Item_add').val(),
+          Item: document.getElementById('item_add').innerText,
           Get: firebase.firestore.Timestamp.now(),
           Status: '미납',
         });
@@ -448,13 +453,18 @@
           'Name': $('#Name_add').val(), 
           'SID': Number($('#SID_add').val()),
           'PNum': $('#PNum_add').val(),
-          'Item': $('#Item_add').val(),
+          'Item': $('#item_add').val(),
           'Get': date_to_str(curDate),
           'Remain': 7,
           'Status': '미납',
         });
         nextID++;
         dialog_add.close();
+    }
+
+    function Save_item_add(){
+      document.getElementById('item_add').innerText = $('#myInput').val();
+      dialog_item_add.close();
     }
 
     dialog_check = $('#dialog_check').dialog({
