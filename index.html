@@ -79,7 +79,7 @@
         <table id="grid"></table>
       </div>
       
-      <div id="dialog_add" class="gj-display-none" style="z-index:1;">
+      <div id="dialog_add" class="input-dialog">
         <div data-role="body">
           <input type="hidden" id="ID" />
           <div class="">
@@ -91,9 +91,9 @@
           <div class="">
             <input type="text" class="gj-textbox-md" id="PNum_add" placeholder="휴대폰번호...">
           </div>
-          <div class="" style="position: absolute; z-index:9999999999;">
+          <div class="">
             <label for="id_label_single">   
-              <select class="js-example-basic-single js-states form-control" id="id_label_single">
+              <select class="js-example-basic-single js-states form-control" id="id_label_single" style="z-index:9999999999;">
                 <option value="AL">Alabama</option>
                 <option value="AL">Alabama</option>
                 <option value="AL">Alabama</option>
@@ -322,8 +322,8 @@
     });
 
     function Save_edit() {
-      if ($('#ID').val()) { 
-        var id = parseInt($('#ID').val());
+      if ($('#ID_edit').val()) { 
+        var id = parseInt($('#ID_edit').val());
         db.collection('대여및반납').doc(id.toString()).set({
           Name: $('#Name_edit').val(),
           SID: Number($('#SID').val()),
