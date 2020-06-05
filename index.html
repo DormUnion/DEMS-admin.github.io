@@ -96,8 +96,8 @@
         </div>
 
         <div data-role="footer">
-          <button type="button" id="btnSave" class="gj-button-md">Save</button>
-          <button type="button" id="btnCancel" class="gj-button-md">Cancel</button>
+          <button type="button" id="btnSave_add" class="gj-button-md">Save</button>
+          <button type="button" id="btnCancel_add" class="gj-button-md">Cancel</button>
         </div>
       </div>
 
@@ -113,8 +113,8 @@
         </div>
 
         <div data-role="footer">
-          <button type="button" id="btnSave" class="gj-button-md">Save</button>
-          <button type="button" id="btnCancel" class="gj-button-md">Cancel</button>
+          <button type="button" id="btnSave_check" class="gj-button-md">Save</button>
+          <button type="button" id="btnCancel_check" class="gj-button-md">Cancel</button>
         </div>
       </div>
 
@@ -148,8 +148,8 @@
         </div>
 
         <div data-role="footer">
-          <button type="button" id="btnSave" class="gj-button-md">Save</button>
-          <button type="button" id="btnCancel" class="gj-button-md">Cancel</button>
+          <button type="button" id="btnSave_edit" class="gj-button-md">Save</button>
+          <button type="button" id="btnCancel_edit" class="gj-button-md">Cancel</button>
         </div>
       </div>
       <!-- Editable table -->
@@ -217,6 +217,17 @@
       return year + "-" + month + "-" + date;
     }
 
+    function str_to_date(str){
+      var month_name = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+      var year = str.split("-")[0];
+      var month = str.split("-")[1];
+      var day = str.split("-")[2];
+      var month_letter = month_name[month-1]; 
+    
+      var date_str = month_letter + day + ", " + year;
+      return date_str;   
+    }
+
     var show = db.collection('대여및반납').orderBy('Status', 'asc').onSnapshot((snapshot) => {
       let changes = snapshot.docChanges();
       if(isFirst){
@@ -255,7 +266,6 @@
         }
       })
     })
-
     
     function buildGrid(data){
       grid = $('#grid').grid({
@@ -278,6 +288,7 @@
         pager: { limit: 5 }
       });
     }
+
     dialog_add = $('#dialog_add').dialog({
       autoOpen: false,
       resizable: false,
@@ -285,12 +296,46 @@
       width: 360
     });
 
-    dialog_check = $('#dialog_check').dialog({
-      autoOpen: false,
-      resizable: false,
-      modal: true,
-      width: 360
+    $('#btnAdd').on('click', function () {
+      $('#ID').val('');
+      $('#Name').val('');
+      $('#SID').val('');
+      $('#PNum').val('');
+      $('#Item').val('');
+      $('#Get').val('');
+      $('#Back').val('');
+      $('#Remain').val('');
+      $('#Status').val('');
+      dialog_add.open('Add');
     });
+
+    $('#btnSave_add').on('click', Save_add);
+    $('#btnCancel_add').on('click', function () {
+      dialog_add.close();
+    });
+
+    function Save_add(){
+      var curDate = new Date(Date.now());
+        db.collection('대여및반납').doc(nextID.toString()).set({
+          Name: $('#Name').val(),
+          SID: Number($('#SID').val()),
+          PNum: $('#PNum').val(),
+          Item: $('#Item').val(),
+          Get: firebase.firestore.Timestamp.now(),
+          Status: '미납',
+        });
+        grid.addRow({
+          'ID': nextID,
+          'Name': $('#Name').val(), 
+          'SID': Number($('#SID').val()),
+          'PNum': $('#PNum').val(),
+          'Item': $('#Item').val(),
+          'Get': date_to_str(curDate),
+          'Remain': 7,
+          'Status': '미납',
+        });
+        dialog_add.close();
+    }
 
     dialog_edit = $('#dialog_edit').dialog({
       autoOpen: false,
@@ -299,25 +344,7 @@
       width: 360
     });
 
-    function Check(e) {
-      $('#Admin').val('');
-      $('#Etc').val('');
-      dialog_check.open('Check');
-    }
-
-    function str_to_date(str){
-      var month_name = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-      var year = str.split("-")[0];
-      var month = str.split("-")[1];
-      var day = str.split("-")[2];
-      var month_letter = month_name[month-1]; 
-    
-      var date_str = month_letter + day + ", " + year;
-      return date_str;   
-    }
-
     function Edit(e) {
-      // var time_back = str_to_timestamp(e.data.record.Back);
       $('#ID').val(e.data.id);
       $('#Name').val(e.data.record.Name);
       $('#SID').val(e.data.record.SID);
@@ -329,15 +356,13 @@
       $('#Status').val(e.data.record.Status);
       dialog_edit.open('Edit');
     }
-    function Delete(e) {
-      if (confirm('Are you sure?')) {
 
-        db.collection('대여및반납').doc(e.data.id.toString()).delete();
+    $('#btnSave_edit').on('click', Save_edit);
+    $('#btnCancel_edit').on('click', function () {
+      dialog_edit.close();
+    });
 
-        grid.removeRow(e.data.id);
-      }
-    }
-    function Save() {
+    function Save_edit() {
       if ($('#ID').val()) { 
         var id = parseInt($('#ID').val());
         db.collection('대여및반납').doc(id.toString()).set({
@@ -362,54 +387,64 @@
           'Status': $('#Status').val(),
         });
         dialog_edit.close();
-      } else {
-        var curDate = new Date(Date.now());
-        db.collection('대여및반납').doc(nextID.toString()).set({
+      } 
+    }
+
+    dialog_check = $('#dialog_check').dialog({
+      autoOpen: false,
+      resizable: false,
+      modal: true,
+      width: 360
+    });
+
+    function Check(e) {
+      $('#Admin').val('');
+      $('#Etc').val('');
+      dialog_check.open('Check');
+    }
+
+    $('#btnSave_check').on('click', Save_check);
+    $('#btnCancel_check').on('click', function () {
+      dialog_check.close();
+    });
+
+    function Save_check() {
+      if ($('#ID').val()) { 
+        var id = parseInt($('#ID').val());
+        db.collection('대여및반납').doc(id.toString()).set({
           Name: $('#Name').val(),
           SID: Number($('#SID').val()),
           PNum: $('#PNum').val(),
           Item: $('#Item').val(),
-          Get: firebase.firestore.Timestamp.now(),
-          // Back: firebase.firestore.Timestamp.now(),
-          // Remain: Number($('#Remain').val()),
-          Status: '미납',
-          // Status: $('#Status').val(),
+          Get: firebase.firestore.Timestamp.fromDate(new Date(str_to_date($('#Get').val()))),
+          Back: firebase.firestore.Timestamp.fromDate(new Date(str_to_date($('#Back').val()))),
+          Remain: Number($('#Remain').val()),
+          Status: $('#Status').val(),
         });
-        grid.addRow({
-          'ID': nextID,
+        grid.updateRow(id, { 
+          'ID': id,
           'Name': $('#Name').val(), 
-          'SID': Number($('#SID').val()),
+          'SID': $('#SID').val(),
           'PNum': $('#PNum').val(),
           'Item': $('#Item').val(),
-          'Get': date_to_str(curDate),
-          // 'Back': date_to_str(Date.now()),
-          // 'Get': $('#Get').val(),
-          // 'Back': $('#Back').val(),
-          'Remain': 7,
-          'Status': '미납',
+          'Get': $('#Get').val(),
+          'Back': $('#Back').val(),
+          'Remain': $('#Remain').val(),
+          'Status': $('#Status').val(),
         });
-        dialog_add.close();
-      }
-  
+        dialog_edit.close();
+      } 
     }
-    $('#btnAdd').on('click', function () {
-      $('#ID').val('');
-      $('#Name').val('');
-      $('#SID').val('');
-      $('#PNum').val('');
-      $('#Item').val('');
-      $('#Get').val('');
-      $('#Back').val('');
-      $('#Remain').val('');
-      $('#Status').val('');
-      dialog_add.open('Add');
-    });
-    $('#btnSave').on('click', Save);
-    $('#btnCancel').on('click', function () {
-      dialog_add.close();
-      dialog_edit.close();
-      dialog_check.close();
-    });
+  
+    function Delete(e) {
+      if (confirm('Are you sure?')) {
+
+        db.collection('대여및반납').doc(e.data.id.toString()).delete();
+
+        grid.removeRow(e.data.id);
+      }
+    }
+
     $('#btnSearch').on('click', function () {
       grid.reload({ page: 1, Name: $('#txtName').val()});
     });
