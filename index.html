@@ -333,7 +333,7 @@
           Back: firebase.firestore.Timestamp.fromDate(new Date(str_to_date($('#Back_edit').val()))),
           Remain: Number($('#Remain_edit').val()),
           Status: $('#Status_edit').val(),
-        });
+        }, {merge: true});
       }
       else{
         db.collection('대여및반납').doc(id.toString()).set({
@@ -344,7 +344,7 @@
           Get: firebase.firestore.Timestamp.fromDate(new Date(str_to_date($('#Get_edit').val()))),
           Remain: Number($('#Remain_edit').val()),
           Status: $('#Status_edit').val(),
-        });
+        }, {merge: true});
       }
       grid.updateRow(id, { 
         'ID': id,
