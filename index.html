@@ -81,7 +81,7 @@
       
       <div id="dialog_add" class="input-dialog">
         <div data-role="body">
-          <input type="hidden" id="ID" />
+          <input type="hidden" id="ID_add" />
           <div class="">
             <input type="text" class="gj-textbox-md" id="Name_add" placeholder="이름...">
           </div>
@@ -110,7 +110,7 @@
 
       <div id="dialog_check" class="gj-display-none">
         <div data-role="body">
-          <input type="hidden" id="ID" />
+          <input type="hidden" id="ID_check" />
           <div class="">
             <input type="text" class="gj-textbox-md" id="Admin" placeholder="담당자이름...">
           </div>
@@ -127,7 +127,7 @@
 
       <div id="dialog_edit" class="gj-display-none">
         <div data-role="body">
-          <input type="hidden" id="ID" />
+          <input type="hidden" id="ID_edit" />
           <div class="">
             <input type="text" class="gj-textbox-md" id="Name_edit" placeholder="이름...">
           </div>
@@ -322,8 +322,8 @@
     });
 
     function Save_edit() {
-      if ($('#ID_edit').val()) { 
-        var id = parseInt($('#ID_edit').val());
+      var id = parseInt($('#ID_edit').val());
+      if ($('#Back_edit').val()) { 
         db.collection('대여및반납').doc(id.toString()).set({
           Name: $('#Name_edit').val(),
           SID: Number($('#SID').val()),
@@ -334,19 +334,30 @@
           Remain: Number($('#Remain_edit').val()),
           Status: $('#Status_edit').val(),
         });
-        grid.updateRow(id, { 
-          'ID': id,
-          'Name': $('#Name_edit').val(), 
-          'SID': $('#SID_edit').val(),
-          'PNum': $('#PNum_edit').val(),
-          'Item': $('#Item_edit').val(),
-          'Get': $('#Get_edit').val(),
-          'Back': $('#Back_edit').val(),
-          'Remain': $('#Remain_edit').val(),
-          'Status': $('#Status_edit').val(),
+      }
+      else{
+        db.collection('대여및반납').doc(id.toString()).set({
+          Name: $('#Name_edit').val(),
+          SID: Number($('#SID').val()),
+          PNum: $('#PNum_edit').val(),
+          Item: $('#Item_edit').val(),
+          Get: firebase.firestore.Timestamp.fromDate(new Date(str_to_date($('#Get_edit').val()))),
+          Remain: Number($('#Remain_edit').val()),
+          Status: $('#Status_edit').val(),
         });
-        dialog_edit.close();
-      } 
+      }
+      grid.updateRow(id, { 
+        'ID': id,
+        'Name': $('#Name_edit').val(), 
+        'SID': $('#SID_edit').val(),
+        'PNum': $('#PNum_edit').val(),
+        'Item': $('#Item_edit').val(),
+        'Get': $('#Get_edit').val(),
+        'Back': $('#Back_edit').val(),
+        'Remain': $('#Remain_edit').val(),
+        'Status': $('#Status_edit').val(),
+      });
+      dialog_edit.close();
     }
 
     dialog_add = $('#dialog_add').dialog({
