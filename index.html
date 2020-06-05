@@ -417,8 +417,8 @@
     });
 
     function Save_check() {
-      if ($('#ID').val()) { 
-        var id = parseInt($('#ID').val());
+      if ($('#ID_check').val()) { 
+        var id = parseInt($('#ID_check').val());
         db.collection('대여및반납').doc(id.toString()).set({
           Name: $('#Name').val(),
           SID: Number($('#SID').val()),
