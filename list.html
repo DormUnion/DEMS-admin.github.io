@@ -168,16 +168,19 @@
 
     var grid, dialog;
     var data = [];
+    var nextID = 0;
 
-
-    db.collection('물품').get().then((snapshot) => {
+    db.collection('물품').orderBy('Category').get().then((snapshot) => {
       let changes = snapshot.docChanges();
         changes.forEach(change => {
             // console.log(change.doc.id);
             // console.log(doc.data())
           if(change.type == 'added'){
             data.push({ 'ID': change.doc.id, 'Category': change.doc.data().Category, 'Name': change.doc.data().Name, 'Total': change.doc.data().Total, 'Available': change.doc.data().Available, 'Period': change.doc.data().Period, 'Cert': change.doc.data().Cert, 'Rental': change.doc.data().Rental,'Late': change.doc.data().Late, 'Etc':change.doc.data().Etc });
-          }    
+            if(parseInt(change.doc.id) > nextID - 1) nextID = parseInt(change.doc.id) + 1;
+            console.log(nextID);
+          }
+
         })
 
         grid = $('#grid').grid({
@@ -251,7 +254,7 @@
               'Etc': $('#Etc').val(),
               });
           } else {
-          db.collection('물품').doc((grid.count(true)+1).toString()).set({
+          db.collection('물품').doc(nextID.toString()).set({
             Category: $('#Category').val(),
             Name: $('#Name').val(),
             Total: $('#Total').val(),
@@ -263,7 +266,7 @@
             Etc: $('#Etc').val(),  
           })
             grid.addRow({
-              'ID': grid.count(true) + 1, 
+              'ID': nextID, 
               'Category': $('#Category').val(),
               'Name': $('#Name').val(),
               'Total': $('#Total').val(),
@@ -275,6 +278,7 @@
               'Etc': $('#Etc').val(),  
               });
           }
+          nextID++;
           dialog.close();
         }
         $('#btnAdd').on('click', function () {

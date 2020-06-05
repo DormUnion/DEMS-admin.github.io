@@ -202,7 +202,15 @@
     firebase.initializeApp(firebaseConfig);
     firebase.analytics();
     const db = firebase.firestore();      
-    
+
+    // Get Product Name
+    var productList = [];
+    var pList = db.collection('물품').orderBy('Name').get().then((snapshot) => {
+      snapshot.docs.forEach(doc => {
+        productList.push(doc.data().Name);
+      })
+    })
+
     function date_to_str(format){
       var year = format.getFullYear();
       var month = format.getMonth() + 1;
@@ -212,18 +220,7 @@
       return year + "-" + month + "-" + date;
     }
 
-    function str_to_date(str){
-      var month_name = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-      var year = str.split("-")[0];
-      var month = str.split("-")[1];
-      var day = str.split("-")[2];
-      var month_letter = month_name[month-1]; 
-    
-      var date_str = month_letter + day + ", " + year;
-      return date_str;   
-    }
-
-    db.collection('대여및반납').orderBy('Status', 'asc').onSnapshot((snapshot) => {
+    var show = db.collection('대여및반납').orderBy('Status', 'asc').onSnapshot((snapshot) => {
       let changes = snapshot.docChanges();
       if(isFirst){
         snapsize = snapshot.size;
@@ -383,6 +380,7 @@
           'Remain': 7,
           'Status': '미납',
         });
+        nextID++;
         dialog_add.close();
     }
 
@@ -446,7 +444,7 @@
     });
     $('#btnClear').on('click', function () {
       $('#txtName').val('');
-      show;
+      show();
     });
  });
   </script>

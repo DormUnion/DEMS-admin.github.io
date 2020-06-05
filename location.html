@@ -218,11 +218,12 @@ var firebaseConfig = {
               Location: $('#Location').val(),
             });
           grid.addRow({ 
-            'ID': nextID + 1, 
+            'ID': nextID, 
             'Category': $('#Category').val(), 
             'Item': $('#Item').val(),
             'Location': $('#Location').val(),
           });
+          nextID++;
         }
         dialog.close();
       }
