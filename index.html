@@ -9,12 +9,14 @@
   <meta name="author" content="">
   <script src="https://www.gstatic.com/firebasejs/7.14.4/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/7.14.4/firebase-firestore.js"></script>
-
+  <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/js/select2.min.js"></script>
   <title>DEMS</title>
 
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" type="text/css" />
   <link href="https://unpkg.com/gijgo@1.9.13/css/gijgo.min.css" rel="stylesheet" type="text/css" />
   <link href="/Content/demo.css" rel="stylesheet" type="text/css" />
+
+  <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/css/select2.min.css" rel="stylesheet" />
   <!-- Bootstrap core CSS -->
   <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
 
@@ -77,43 +79,34 @@
       <div class="gj-margin-top-10">
         <table id="grid"></table>
       </div>
-
-      <div id="dialog" class="gj-display-none">
+      
+      <div id="dialog_add" class="gj-display-none">
         <div data-role="body">
           <input type="hidden" id="ID" />
           <div class="">
-            <input type="text" class="gj-textbox-md" id="Name" placeholder="이름...">
+            <input type="text" class="gj-textbox-md" id="Name_add" placeholder="이름...">
           </div>
           <div class="gj-margin-top-20">
-            <input type="text" class="gj-textbox-md" id="SID" placeholder="학번..." />
+            <input type="text" class="gj-textbox-md" id="SID_add" placeholder="학번..." />
           </div>
           <div class="">
-            <input type="text" class="gj-textbox-md" id="PNum" placeholder="휴대폰번호...">
+            <input type="text" class="gj-textbox-md" id="PNum_add" placeholder="휴대폰번호...">
           </div>
           <div class="">
-            <input type="text" class="gj-textbox-md" id="Item" placeholder="물품...">
-          </div>
-          <div class="">
-            <input type="text" class="gj-textbox-md" id="Get" placeholder="빌린날짜...">
-          </div>
-          <div class="">
-            <input type="text" class="gj-textbox-md" id="Back" placeholder="반납날짜...">
-          </div>
-          <div class="">
-            <input type="text" class="gj-textbox-md" id="Remain" placeholder="남은일수...">
-          </div>
-          <div class="">
-            <input type="text" class="gj-textbox-md" id="Status" placeholder="반납상태...">
+            <label for="id_label_single">   
+              <select class="js-example-basic-single js-states form-control" id="id_label_single"></select>
+            </label>
+            <input type="text" class="gj-textbox-md" id="Item_add" placeholder="물품...">
           </div>
         </div>
 
         <div data-role="footer">
-          <button type="button" id="btnSave" class="gj-button-md">Save</button>
-          <button type="button" id="btnCancel" class="gj-button-md">Cancel</button>
+          <button type="button" id="btnSave_add" class="gj-button-md">Save</button>
+          <button type="button" id="btnCancel_add" class="gj-button-md">Cancel</button>
         </div>
       </div>
 
-      <div id="dialog2" class="gj-display-none">
+      <div id="dialog_check" class="gj-display-none">
         <div data-role="body">
           <input type="hidden" id="ID" />
           <div class="">
@@ -125,8 +118,43 @@
         </div>
 
         <div data-role="footer">
-          <button type="button" id="btnSave" class="gj-button-md">Save</button>
-          <button type="button" id="btnCancel" class="gj-button-md">Cancel</button>
+          <button type="button" id="btnSave_check" class="gj-button-md">Save</button>
+          <button type="button" id="btnCancel_check" class="gj-button-md">Cancel</button>
+        </div>
+      </div>
+
+      <div id="dialog_edit" class="gj-display-none">
+        <div data-role="body">
+          <input type="hidden" id="ID" />
+          <div class="">
+            <input type="text" class="gj-textbox-md" id="Name_edit" placeholder="이름...">
+          </div>
+          <div class="gj-margin-top-20">
+            <input type="text" class="gj-textbox-md" id="SID_edit" placeholder="학번..." />
+          </div>
+          <div class="">
+            <input type="text" class="gj-textbox-md" id="PNum_edit" placeholder="휴대폰번호...">
+          </div>
+          <div class="">
+            <input type="text" class="gj-textbox-md" id="Item_edit" placeholder="물품...">
+          </div>
+          <div class="">
+            <input type="text" class="gj-textbox-md" id="Get_edit" placeholder="빌린날짜...">
+          </div>
+          <div class="">
+            <input type="text" class="gj-textbox-md" id="Back_edit" placeholder="반납날짜...">
+          </div>
+          <div class="">
+            <input type="text" class="gj-textbox-md" id="Remain_edit" placeholder="남은일수...">
+          </div>
+          <div class="">
+            <input type="text" class="gj-textbox-md" id="Status_edit" placeholder="반납상태...">
+          </div>
+        </div>
+
+        <div data-role="footer">
+          <button type="button" id="btnSave_edit" class="gj-button-md">Save</button>
+          <button type="button" id="btnCancel_edit" class="gj-button-md">Cancel</button>
         </div>
       </div>
       <!-- Editable table -->
@@ -149,22 +177,13 @@
   <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
   <script type="text/javascript" src="./vendor/jquery/checkbox.js"></script>
   <script src="https://www.gstatic.com/firebasejs/7.14.4/firebase-analytics.js"></script>
-
+  <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/js/select2.min.js"></script>
 
   <!-- Menu Toggle Script -->
-  <script>
-    $("#menu-toggle").click(function(e) {
-      e.preventDefault();
-      $("#wrapper").toggleClass("toggled");
-    });
-
-    const $td = $(this).find('td');
-    const h = {};
-  </script>
   <script type="text/javascript">
     $(document).ready(function () {
-
-    var grid, dialog;
+    $('.js-example-basic-single').select2();
+    var grid, dialog_add, dialog_edit, dialog_check;
     var data = [];
     var isFirst = true;
     var snapsize, cnt = 0;
@@ -184,7 +203,15 @@
     firebase.initializeApp(firebaseConfig);
     firebase.analytics();
     const db = firebase.firestore();      
-    
+
+    // Get Product Name
+    var productList = [];
+    var pList = db.collection('물품').orderBy('Name').get().then((snapshot) => {
+      snapshot.docs.forEach(doc => {
+        productList.push(doc.data().Name);
+      })
+    })
+
     function date_to_str(format){
       var year = format.getFullYear();
       var month = format.getMonth() + 1;
@@ -232,7 +259,6 @@
         }
       })
     })
-
     
     function buildGrid(data){
       grid = $('#grid').grid({
@@ -255,14 +281,110 @@
         pager: { limit: 5 }
       });
     }
-    dialog = $('#dialog').dialog({
+
+    dialog_edit = $('#dialog_edit').dialog({
       autoOpen: false,
       resizable: false,
       modal: true,
       width: 360
     });
 
-    dialog2 = $('#dialog2').dialog({
+    function Edit(e) {
+    
+      $('#ID_edit').val(e.data.record.ID);
+      $('#Name_edit').val(e.data.record.Name);
+      $('#SID_edit').val(e.data.record.SID);
+      $('#PNum_edit').val(e.data.record.PNum);
+      $('#Item_edit').val(e.data.record.Item);
+      $('#Get_edit').val(e.data.record.Get);
+      $('#Back_edit').val(e.data.record.Back);
+      $('#Remain_edit').val(e.data.record.Remain);
+      $('#Status_edit').val(e.data.record.Status);
+      dialog_edit.open('Edit');
+    }
+
+    $('#btnSave_edit').on('click', Save_edit);
+    $('#btnCancel_edit').on('click', function () {
+      dialog_edit.close();
+    });
+
+    function Save_edit() {
+      if ($('#ID').val()) { 
+        var id = parseInt($('#ID').val());
+        db.collection('대여및반납').doc(id.toString()).set({
+          Name: $('#Name_edit').val(),
+          SID: Number($('#SID').val()),
+          PNum: $('#PNum_edit').val(),
+          Item: $('#Item_edit').val(),
+          Get: firebase.firestore.Timestamp.fromDate(new Date(str_to_date($('#Get_edit').val()))),
+          Back: firebase.firestore.Timestamp.fromDate(new Date(str_to_date($('#Back_edit').val()))),
+          Remain: Number($('#Remain_edit').val()),
+          Status: $('#Status_edit').val(),
+        });
+        grid.updateRow(id, { 
+          'ID': id,
+          'Name': $('#Name_edit').val(), 
+          'SID': $('#SID_edit').val(),
+          'PNum': $('#PNum_edit').val(),
+          'Item': $('#Item_edit').val(),
+          'Get': $('#Get_edit').val(),
+          'Back': $('#Back_edit').val(),
+          'Remain': $('#Remain_edit').val(),
+          'Status': $('#Status_edit').val(),
+        });
+        dialog_edit.close();
+      } 
+    }
+
+    dialog_add = $('#dialog_add').dialog({
+      autoOpen: false,
+      resizable: false,
+      modal: true,
+      width: 360
+    });
+
+    $('#btnAdd').on('click', function () {
+      $('#ID_add').val('');
+      $('#Name_add').val('');
+      $('#SID_add').val('');
+      $('#PNum_add').val('');
+      $('#Item_add').val('');
+      $('#Get_add').val('');
+      $('#Back_add').val('');
+      $('#Remain_add').val('');
+      $('#Status_add').val('');
+      dialog_add.open('Add');
+    });
+
+    $('#btnSave_add').on('click', Save_add);
+    $('#btnCancel_add').on('click', function () {
+      dialog_add.close();
+    });
+
+    function Save_add(){
+      var curDate = new Date(Date.now());
+        db.collection('대여및반납').doc(nextID.toString()).set({
+          Name: $('#Name_add').val(),
+          SID: Number($('#SID_add').val()),
+          PNum: $('#PNum_add').val(),
+          Item: $('#Item_add').val(),
+          Get: firebase.firestore.Timestamp.now(),
+          Status: '미납',
+        });
+        grid.addRow({
+          'ID': nextID,
+          'Name': $('#Name_add').val(), 
+          'SID': Number($('#SID_add').val()),
+          'PNum': $('#PNum_add').val(),
+          'Item': $('#Item_add').val(),
+          'Get': date_to_str(curDate),
+          'Remain': 7,
+          'Status': '미납',
+        });
+        dialog_add.close();
+    }
+
+    dialog_check = $('#dialog_check').dialog({
       autoOpen: false,
       resizable: false,
       modal: true,
@@ -272,42 +394,15 @@
     function Check(e) {
       $('#Admin').val('');
       $('#Etc').val('');
-      dialog2.open('Check');
+      dialog_check.open('Check');
     }
 
-    function str_to_date(str){
-      var month_name = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-      var year = str.split("-")[0];
-      var month = str.split("-")[1];
-      var day = str.split("-")[2];
-      var month_letter = month_name[month-1]; 
-    
-      var date_str = month_letter + day + ", " + year;
-      return date_str;   
-    }
+    $('#btnSave_check').on('click', Save_check);
+    $('#btnCancel_check').on('click', function () {
+      dialog_check.close();
+    });
 
-    function Edit(e) {
-      // var time_back = str_to_timestamp(e.data.record.Back);
-      $('#ID').val(e.data.id);
-      $('#Name').val(e.data.record.Name);
-      $('#SID').val(e.data.record.SID);
-      $('#PNum').val(e.data.record.PNum);
-      $('#Item').val(e.data.record.Item);
-      $('#Get').val(e.data.record.Get);
-      $('#Back').val(e.data.record.Back);
-      $('#Remain').val(e.data.record.Remain);
-      $('#Status').val(e.data.record.Status);
-      dialog.open('Edit');
-    }
-    function Delete(e) {
-      if (confirm('Are you sure?')) {
-
-        db.collection('대여및반납').doc(e.data.id.toString()).delete();
-
-        grid.removeRow(e.data.id);
-      }
-    }
-    function Save() {
+    function Save_check() {
       if ($('#ID').val()) { 
         var id = parseInt($('#ID').val());
         db.collection('대여및반납').doc(id.toString()).set({
@@ -331,51 +426,19 @@
           'Remain': $('#Remain').val(),
           'Status': $('#Status').val(),
         });
-      } else {
-        var curDate = new Date(Date.now());
-        db.collection('대여및반납').doc(nextID.toString()).set({
-          Name: $('#Name').val(),
-          SID: Number($('#SID').val()),
-          PNum: $('#PNum').val(),
-          Item: $('#Item').val(),
-          Get: firebase.firestore.Timestamp.now(),
-          // Back: firebase.firestore.Timestamp.now(),
-          // Remain: Number($('#Remain').val()),
-          Status: '미납',
-          // Status: $('#Status').val(),
-        });
-        grid.addRow({
-          'ID': nextID,
-          'Name': $('#Name').val(), 
-          'SID': Number($('#SID').val()),
-          'PNum': $('#PNum').val(),
-          'Item': $('#Item').val(),
-          'Get': date_to_str(curDate),
-          // 'Back': date_to_str(Date.now()),
-          // 'Get': $('#Get').val(),
-          // 'Back': $('#Back').val(),
-          'Remain': 7,
-          'Status': '미납',
-        });
-      }
-      dialog.close();
+        dialog_edit.close();
+      } 
     }
-    $('#btnAdd').on('click', function () {
-      $('#ID').val('');
-      $('#Name').val('');
-      $('#SID').val('');
-      $('#PNum').val('');
-      $('#Item').val('');
-      $('#Get').val('');
-      $('#Back').val('');
-      $('#Remain').val('');
-      $('#Status').val('');
-      dialog.open('Add');
-    });
-    $('#btnSave').on('click', Save);
-    $('#btnCancel').on('click', function () {
-      dialog.close();
-    });
+  
+    function Delete(e) {
+      if (confirm('Are you sure?')) {
+
+        db.collection('대여및반납').doc(e.data.id.toString()).delete();
+
+        grid.removeRow(e.data.id);
+      }
+    }
+
     $('#btnSearch').on('click', function () {
       grid.reload({ page: 1, Name: $('#txtName').val()});
     });
