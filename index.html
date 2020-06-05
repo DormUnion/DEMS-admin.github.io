@@ -79,7 +79,7 @@
         <table id="grid"></table>
       </div>
       
-      <div id="dialog_add" class="gj-display-none">
+      <div id="dialog_add" class="gj-display-none" style="z-index:1;">
         <div data-role="body">
           <input type="hidden" id="ID" />
           <div class="">
@@ -91,11 +91,14 @@
           <div class="">
             <input type="text" class="gj-textbox-md" id="PNum_add" placeholder="휴대폰번호...">
           </div>
-          <div class="">
+          <div class="" style="position: absolute; z-index:9999999999;">
             <label for="id_label_single">   
-              <select class="js-example-basic-single js-states form-control" id="id_label_single"></select>
+              <select class="js-example-basic-single js-states form-control" id="id_label_single">
+                <option value="AL">Alabama</option>
+                <option value="AL">Alabama</option>
+                <option value="AL">Alabama</option>
+              </select>
             </label>
-            <input type="text" class="gj-textbox-md" id="Item_add" placeholder="물품...">
           </div>
         </div>
 
@@ -181,7 +184,7 @@
   <!-- Menu Toggle Script -->
   <script type="text/javascript">
     $(document).ready(function () {
-    $('.js-example-basic-single').select2();
+    $('.js-example-basic-single').select2({width : '310px'});
     var grid, dialog_add, dialog_edit, dialog_check;
     var data = [];
     var isFirst = true;
@@ -218,6 +221,17 @@
       var date = format.getDate();
       if(date<10) date = '0' + date;
       return year + "-" + month + "-" + date;
+    }
+
+    function str_to_date(str){
+      var month_name = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+      var year = str.split("-")[0];
+      var month = str.split("-")[1];
+      var day = str.split("-")[2];
+      var month_letter = month_name[month-1]; 
+    
+      var date_str = month_letter + day + ", " + year;
+      return date_str;   
     }
 
     var show = db.collection('대여및반납').orderBy('Status', 'asc').onSnapshot((snapshot) => {
@@ -264,11 +278,11 @@
         primaryKey: 'ID',
         dataSource: data,
         columns: [
-        { field: 'ID' },
-        { field: 'Name', width: 100, title: '이름', align: 'center', sortable: true },
+        { field: 'ID'},
+        { field: 'Name',title: '이름', align: 'center', sortable: true },
         { field: 'SID', title: '학번', align: 'center', sortable: true },
-        { field: 'PNum', width: 150, title: '휴대폰번호', align: 'center', sortable: true },
-        { field: 'Item', width: 150, title: '물품', align: 'center', sortable: true },
+        { field: 'PNum', title: '휴대폰번호', align: 'center', sortable: true },
+        { field: 'Item', title: '물품', align: 'center', sortable: true },
         { field: 'Get', title: '빌린날짜', align: 'center', sortable: true },
         { field: 'Back', title: '반납날짜', align: 'center', sortable: true },
         { field: 'Remain', title: '남은일수', align: 'center', sortable: true },
