@@ -431,6 +431,7 @@
     function Save_check() {
       var curDate = new Date(Date.now());
       var id = parseInt($('#ID_check').val());
+      var gridData = grid.getById(id);
       console.log(id, $('#Admin').val());
       console.log($('Name_edit').val());
       db.collection('대여및반납').doc(id.toString()).set({
@@ -439,15 +440,15 @@
         Admin: $('#Admin').val(),
         Etc: $('#Etc').val(),
       }, {merge: true });
-      grid.updateRow(id, { 
-        // 'ID': id,
-        // 'Name': $('#Name_check').val(), 
-        // 'SID': $('#SID_check').val(),
-        // 'PNum': $('#PNum_check').val(),
-        // 'Item': $('#Item_check').val(),
-        // 'Get': $('#Get_check').val(),
+      grid.updateRow(id, {
+        'ID': id,
+        'Name': gridData.Name, 
+        'SID': gridData.SID,
+        'PNum': gridData.PNum,
+        'Item': gridData.Item,
+        'Get': gridData.Get,
         'Back': date_to_str(curDate),
-        // 'Remain': $('#Remain_check').val(),
+        'Remain': gridData.Remain,
         'Status': '완납',
       });
       dialog_check.close();
