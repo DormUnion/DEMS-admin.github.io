@@ -78,7 +78,7 @@
         <table id="grid"></table>
       </div>
 
-      <div id="dialog" class="gj-display-none">
+      <div id="dialog_add" class="gj-display-none">
         <div data-role="body">
           <input type="hidden" id="ID" />
           <div class="">
@@ -101,7 +101,7 @@
         </div>
       </div>
 
-      <div id="dialog2" class="gj-display-none">
+      <div id="dialog_check" class="gj-display-none">
         <div data-role="body">
           <input type="hidden" id="ID" />
           <div class="">
@@ -109,6 +109,41 @@
           </div>
           <div class="gj-margin-top-20">
             <input type="text" class="gj-textbox-md" id="Etc" placeholder="비고..." />
+          </div>
+        </div>
+
+        <div data-role="footer">
+          <button type="button" id="btnSave" class="gj-button-md">Save</button>
+          <button type="button" id="btnCancel" class="gj-button-md">Cancel</button>
+        </div>
+      </div>
+
+      <div id="dialog_edit" class="gj-display-none">
+        <div data-role="body">
+          <input type="hidden" id="ID" />
+          <div class="">
+            <input type="text" class="gj-textbox-md" id="Name" placeholder="이름...">
+          </div>
+          <div class="gj-margin-top-20">
+            <input type="text" class="gj-textbox-md" id="SID" placeholder="학번..." />
+          </div>
+          <div class="">
+            <input type="text" class="gj-textbox-md" id="PNum" placeholder="휴대폰번호...">
+          </div>
+          <div class="">
+            <input type="text" class="gj-textbox-md" id="Item" placeholder="물품...">
+          </div>
+          <div class="">
+            <input type="text" class="gj-textbox-md" id="Get" placeholder="빌린날짜...">
+          </div>
+          <div class="">
+            <input type="text" class="gj-textbox-md" id="Back" placeholder="반납날짜...">
+          </div>
+          <div class="">
+            <input type="text" class="gj-textbox-md" id="Remain" placeholder="남은일수...">
+          </div>
+          <div class="">
+            <input type="text" class="gj-textbox-md" id="Status" placeholder="반납상태...">
           </div>
         </div>
 
@@ -260,7 +295,7 @@
     function Check(e) {
       $('#Admin').val('');
       $('#Etc').val('');
-      dialog2.open('Check');
+      dialog_check.open('Check');
     }
 
     function str_to_date(str){
@@ -285,7 +320,7 @@
       $('#Back').val(e.data.record.Back);
       $('#Remain').val(e.data.record.Remain);
       $('#Status').val(e.data.record.Status);
-      dialog.open('Edit');
+      dialog_edit.open('Edit');
     }
     function Delete(e) {
       if (confirm('Are you sure?')) {
@@ -358,7 +393,7 @@
       $('#Back').val('');
       $('#Remain').val('');
       $('#Status').val('');
-      dialog.open('Add');
+      dialog_add.open('Add');
     });
     $('#btnSave').on('click', Save);
     $('#btnCancel').on('click', function () {
