@@ -92,13 +92,25 @@
             <input type="text" class="gj-textbox-md" id="PNum_add" placeholder="휴대폰번호...">
           </div>
           <div class="">
-            <label for="id_label_single">   
-              <select class="js-example-basic-single js-states form-control" id="id_label_single" style="z-index:9999999999;">
-                <option value="AL">Alabama</option>
-                <option value="AL">Alabama</option>
-                <option value="AL">Alabama</option>
-              </select>
-            </label>
+            <button type="button" id="item_add" class="gj-button-md" style="background-color:grey; color:white; width:315px;">물품 선택</button>
+          </div>
+        </div>
+
+        <div data-role="footer">
+          <button type="button" id="btnSave_add" class="gj-button-md">Save</button>
+          <button type="button" id="btnCancel_add" class="gj-button-md">Cancel</button>
+        </div>
+      </div>
+
+      <div id="dialog_item_add" class="input-dialog">
+        <div data-role="body">
+          <input type="hidden" id="ID" />
+          <div class="">
+            <input type="text" id="myInput" onkeyup="myFunction()" placeholder="물품명..." title="Type in a name">
+          </div>
+          <div style="height: 70px;">
+            <ul id="productList">
+            </ul>
           </div>
         </div>
 
@@ -183,9 +195,10 @@
 
   <!-- Menu Toggle Script -->
   <script type="text/javascript">
+
     $(document).ready(function () {
     $('.js-example-basic-single').select2({width : '310px'});
-    var grid, dialog_add, dialog_edit, dialog_check;
+    var grid, dialog_add, dialog_edit, dialog_check, dialog_item_add;
     var data = [];
     var isFirst = true;
     var snapsize, cnt = 0;
@@ -212,8 +225,30 @@
       snapshot.docs.forEach(doc => {
         productList.push(doc.data().Name);
       })
+      console.log(productList);
+      console.log(productList.length);
+      var ul = document.getElementById("productList");
+    
+      for (var i = 0; i < productList.length; i++) {
+          console.log("a");
+          var name = productList[i];
+          console.log(name);
+          var li = document.createElement('li');
+          var a = document.createElement('a');
+          var linkText = document.createTextNode(name);
+          a.id = name;
+          a.style.color = "black";
+          a.appendChild(linkText);
+          a.href = "#"
+          a.onclick = function(){
+            $('#myInput').val(document.getElementById(this.id).text);
+          }
+          
+          li.appendChild(a);
+          ul.appendChild(li);
+      }
     })
-
+    
     function date_to_str(format){
       var year = format.getFullYear();
       var month = format.getMonth() + 1;
@@ -368,6 +403,19 @@
       $('#Status_add').val('');
       dialog_add.open('Add');
     });
+    
+    $('#item_add').on('click', selectItem);
+
+    function selectItem(){
+      dialog_item_add.open('물품 선택');
+    }
+
+    dialog_item_add = $('#dialog_item_add').dialog({
+      autoOpen: false,
+      resizable: false,
+      modal: true,
+      width: 500
+    });
 
     $('#btnSave_add').on('click', Save_add);
     $('#btnCancel_add').on('click', function () {
@@ -461,6 +509,23 @@
       show();
     });
  });
+
+ function myFunction() {
+    var input, filter, ul, li, a, i, txtValue;
+    input = document.getElementById("myInput");
+    filter = input.value.toUpperCase();
+    ul = document.getElementById("productList");
+    li = ul.getElementsByTagName("li");
+    for (i = 0; i < li.length; i++) {
+        a = li[i].getElementsByTagName("a")[0];
+        txtValue = a.textContent || a.innerText;
+        if (txtValue.toUpperCase().indexOf(filter) > -1) {
+            li[i].style.display = "";
+        } else {
+            li[i].style.display = "none";
+            }
+        }
+    }
   </script>
 </body>
 
