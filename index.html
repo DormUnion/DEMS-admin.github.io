@@ -250,14 +250,14 @@
       snapshot.docs.forEach(doc => {
         productList.push(doc.data().Name);
       })
-      console.log(productList);
-      console.log(productList.length);
+      // console.log(productList);
+      // console.log(productList.length);
       var ul = document.getElementById("productList");
 
       for (var i = 0; i < productList.length; i++) {
-        console.log("a");
+        // console.log("a");
         var name = productList[i];
-        console.log(name);
+        // console.log(name);
         var li = document.createElement('li');
         var a = document.createElement('a');
         var linkText = document.createTextNode(name);
@@ -321,7 +321,7 @@
             var back_str = date_to_str(back.toDate());
           }
 
-          data.push({ 'ID': change.doc.id, 'Name': change.doc.data().Name, 'SID': change.doc.data().SID, 'PNum': change.doc.data().PNum, 'Item': change.doc.data().Item, 'ItemNum': change.doc.ItemNum, 'Back': back_str, 'Remain': remain,'Status': change.doc.data().Status, 'RentPerson': change.doc.data().RentPerson, 'Admin': change.doc.data().Admin, 'Get': get_str, 'Etc': change.doc.data().Etc});
+          data.push({ 'ID': change.doc.id, 'Name': change.doc.data().Name, 'SID': change.doc.data().SID, 'PNum': change.doc.data().PNum, 'Item': change.doc.data().Item, 'ItemNum': change.doc.data().ItemNum, 'Back': back_str, 'Remain': remain,'Status': change.doc.data().Status, 'RentPerson': change.doc.data().RentPerson, 'Admin': change.doc.data().Admin, 'Get': get_str, 'Etc': change.doc.data().Etc});
           cnt++;
           if(cnt >= snapsize) {
             buildGrid(data);
@@ -351,9 +351,9 @@
         { field: 'Remain', title: '남은일수', align: 'center', sortable: true },
         { field: 'Status', title: '반납상태', align: 'center', sortable: true },
         { field: 'RentPerson', title: '\t대여담당자', align: 'center', hidden: true},
-        { field: 'Admin', title: '반납담당자', align: 'center', hidden: true},
-        { field: 'Get', title: '빌린날짜', hidden: true },        
-        { field: 'Etc', title: '비고', align: 'center', hidden: true },
+        { field: 'Admin', title: '\t반납담당자', align: 'center', hidden: true},
+        { field: 'Get', title: '\t빌린날짜', hidden: true },        
+        { field: 'Etc', title: '\t비고', align: 'center', hidden: true },
         { width: 64, tmpl: '<span class="material-icons gj-cursor-pointer">check</span>', align: 'center', events: { 'click': Check } },
         { width: 64, tmpl: '<span class="material-icons gj-cursor-pointer">edit</span>', align: 'center', events: { 'click': Edit } },
         { width: 64, tmpl: '<span class="material-icons gj-cursor-pointer">delete</span>', align: 'center', events: { 'click': Delete } }
@@ -472,8 +472,22 @@
       dialog_item_add.close();
     });
 
-    function Save_add(){
+function Save_add(){
       var curDate = new Date(Date.now());
+      var productID, available;
+
+      db.collection('물품').where('Name', '==', document.getElementById('item_add').innerText).get().then((snap) => {
+        snap.docs.forEach(doc => {
+          productID = doc.id;
+          available = doc.data().Available;
+          console.log(productID, available, Number($('#ItemNum_add').val()));
+          console.log(available - Number($('#ItemNum_add').val()));
+        });
+        db.collection('물품').doc(productID).set({
+          Available: available - Number($('#ItemNum_add').val())
+        }, {merge:true});
+      });
+
       db.collection('대여및반납').doc(nextID.toString()).set({
         Name: $('#Name_add').val(),
         SID: Number($('#SID_add').val()),
@@ -490,7 +504,7 @@
         'SID': Number($('#SID_add').val()),
         'PNum': $('#PNum_add').val(),
         'Item': document.getElementById('item_add').innerText,
-        // 'ItemNum': Number($('#ItemNum_add').val()),
+        'ItemNum': Number($('#ItemNum_add').val()),
         // 'RentAdmin': $('#RentAdmin_add').val(),
         'Get': date_to_str(curDate),
         'Remain': 7,
@@ -528,8 +542,22 @@
       var curDate = new Date(Date.now());
       var id = parseInt($('#ID_check').val());
       var gridData = grid.getById(id);
-      console.log(id, $('#Admin').val());
-      console.log($('Name_edit').val());
+      var productID, available;
+      console.log(gridData.ItemNum);
+
+      db.collection('물품').where('Name', '==', gridData.Item).get().then((snap) => {
+        snap.docs.forEach(doc => {
+          productID = doc.id;
+          available = doc.data().Available;
+        });
+        console.log(available);
+        console.log(available + parseInt(gridData.ItemNum));
+        console.log(parseInt(available) + parseInt(gridData.ItemNum));
+        db.collection('물품').doc(productID).set({
+          Available: parseInt(available) + parseInt(gridData.ItemNum),
+        }, {merge:true});
+      });
+      
       db.collection('대여및반납').doc(id.toString()).set({
         Back: firebase.firestore.Timestamp.now(),
         Status: '완납',
@@ -546,6 +574,7 @@
         'Back': date_to_str(curDate),
         'Remain': gridData.Remain,
         'Status': '완납',
+        'ItemNum': gridData.ItemNum,
       });
       dialog_check.close();
     }
