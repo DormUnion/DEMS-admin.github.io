@@ -321,7 +321,7 @@
             var back_str = date_to_str(back.toDate());
           }
 
-          data.push({ 'ID': change.doc.id, 'Name': change.doc.data().Name, 'SID': change.doc.data().SID, 'PNum': change.doc.data().PNum, 'Item': change.doc.data().Item, 'ItemNum': change.doc.data().ItemNum, 'Back': back_str, 'Remain': remain,'Status': change.doc.data().Status, 'RentPerson': change.doc.data().RentPerson, 'Admin': change.doc.data().Admin, 'Get': get_str, 'Etc': change.doc.data().Etc});
+          data.push({ 'ID': change.doc.id, 'Name': change.doc.data().Name, 'SID': change.doc.data().SID, 'PNum': change.doc.data().PNum, 'Item': change.doc.data().Item, 'ItemNum': change.doc.data().ItemNum, 'Back': back_str, 'Remain': remain,'Status': change.doc.data().Status, 'RentAdmin': change.doc.data().RentAdmin, 'Admin': change.doc.data().Admin, 'Get': get_str, 'Etc': change.doc.data().Etc});
           cnt++;
           if(cnt >= snapsize) {
             buildGrid(data);
@@ -350,7 +350,7 @@
         { field: 'Back', title: '반납날짜', align: 'center', sortable: true },
         { field: 'Remain', title: '남은일수', align: 'center', sortable: true },
         { field: 'Status', title: '반납상태', align: 'center', sortable: true },
-        { field: 'RentPerson', title: '\t대여담당자', align: 'center', hidden: true},
+        { field: 'RentAdmin', title: '\t대여담당자', align: 'center', hidden: true},
         { field: 'Admin', title: '\t반납담당자', align: 'center', hidden: true},
         { field: 'Get', title: '\t빌린날짜', hidden: true },        
         { field: 'Etc', title: '\t비고', align: 'center', hidden: true },
@@ -505,7 +505,7 @@ function Save_add(){
         'PNum': $('#PNum_add').val(),
         'Item': document.getElementById('item_add').innerText,
         'ItemNum': Number($('#ItemNum_add').val()),
-        // 'RentAdmin': $('#RentAdmin_add').val(),
+        'RentAdmin': $('#RentAdmin_add').val(),
         'Get': date_to_str(curDate),
         'Remain': 7,
         'Status': '미납',
