@@ -588,6 +588,9 @@ function Save_add(){
 
     $('#btnSearch').on('click',Search);
     function Search(e) {
+      $('#Name_search').val('');
+      $('#SID_search').val('');
+      $('#PNum_search').val('');
       dialog_search.open('Search');
     }
 
