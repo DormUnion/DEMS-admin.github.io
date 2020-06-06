@@ -318,6 +318,9 @@
       grid = $('#grid').grid({
         primaryKey: 'ID',
         dataSource: data,
+        detailTemplate: '<div class="row"></div>',
+        responsive: true,
+        showHiddenColumnsAsDetails: true,
         columns: [
         { field: 'ID'},
         { field: 'Name',title: '이름', align: 'center', sortable: true },
